@@ -132,11 +132,10 @@ body {
             &#task-list {
                 li {
                     border-bottom: 1px solid $line-gray;
-                    padding: 15px;
+                    padding: 20px 15px;
 
                     .checkbox {
                         display: inline-block;
-                        margin: 20px auto;
                         position: relative;
                         vertical-align: middle;
                         width: 20px;
