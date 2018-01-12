@@ -2,23 +2,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Todo app</title>
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400" rel="stylesheet">
     <script src="dist/app.bundle.js"></script>
 </head>
 <body>
     <img src="img/orange-bg.svg" />
     <h1>Just another Todo app</h1>
     <div class="new-task">
-        <input id="new-task-input"/>
+        <input id="new-task-input" placeholder="Task description.."/>
         <button id="new-task-button">New task</button>
     </div>
     
     <section id="app">
         <div class="heading">
-            <p id="date"><span class="bold">Friday,</span> 12th</p>
+            <p id="date"><span class="day">Friday,</span> 12th</p>
             <p id="month">January</p>
-            <p id="task-count"><span class="bold">4</span> Tasks</p>
+            <p id="task-count">4 Active tasks</p>
         </div>
         <ul id="task-list">
             <li>
