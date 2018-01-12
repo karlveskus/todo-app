@@ -47,11 +47,12 @@ body {
             font-size: 17px;
             font-weight: 100;
             height: 35px;
+            outline: none;
             padding: 0 10px;
-            width: 260px;
+            width: 265px;
 
             @media (max-width: 500px) {
-                width: calc(100% - 125px);
+                width: calc(100% - 135px);
             }
 
             &::placeholder {
@@ -65,12 +66,18 @@ body {
             box-shadow: $box-shadow;
             box-sizing: border-box;
             color: $line-gray;
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 100;
             height: 35px;
             margin-left: 10px;
+            outline: none;
             vertical-align: top;
-            width: 95px;
+            width: 100px;
+
+            &:hover, &:active {
+                background: $dark-purple;
+                cursor: pointer;
+            }
         }
     }
 
@@ -127,8 +134,46 @@ body {
                     border-bottom: 1px solid $line-gray;
                     padding: 15px;
 
-                    input {
-                        margin: 0;
+                    .checkbox {
+                        display: inline-block;
+                        margin: 20px auto;
+                        position: relative;
+                        vertical-align: middle;
+                        width: 20px;
+
+                        label {
+                            background: #FCFFF4;
+                            border: 1px solid $text-gray;
+                            border-radius: 4px;
+                            cursor: pointer;
+                            height: 18px;
+                            left: 0;
+                            position: absolute;
+                            top: 1px;
+                            width: 18px;
+
+                            &:after {
+                                border: 3px solid $text-gray;
+                                border-right: none;
+                                border-top: none;
+                                content: '';
+                                height: 4px;
+                                left: 4px;
+                                opacity: 0;
+                                position: absolute;
+                                top: 4px;
+                                transform: rotate(-45deg);
+                                width: 8px;
+                            }
+                        }
+
+                        input[type=checkbox] {
+                            visibility: hidden;
+
+                            &:checked + label:after {
+                                opacity: 1;
+                            }
+                        }
                     }
 
                     p {
@@ -136,10 +181,15 @@ body {
                         font-size: 20px;
                         margin: 0 0 0 10px;
                         overflow: hidden;
+                        position: relative;
                         text-overflow: ellipsis;
-                        vertical-align: bottom;
+                        vertical-align: middle;
                         white-space: nowrap;
-                        width: 90%;
+                        width: 80%;
+                    }
+
+                    &:hover {
+                        background: $dark-gray;
                     }
                 }
             }
@@ -154,6 +204,11 @@ body {
                     &.active {
                         color: $purple;
                         font-weight: 300;
+                    }
+
+                    &:hover {
+                        color: $purple;
+                        cursor: pointer;
                     }
                 }
             }
