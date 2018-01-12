@@ -40,6 +40,7 @@ body {
 
         input {
             border: 0;
+            border-radius: 0;
             box-shadow: $box-shadow;
             box-sizing: border-box;
             color: $purple;
@@ -50,7 +51,7 @@ body {
             width: 260px;
 
             @media (max-width: 500px) {
-                width: calc(100% - 120px);
+                width: calc(100% - 125px);
             }
 
             &::placeholder {
@@ -69,7 +70,7 @@ body {
             height: 35px;
             margin-left: 10px;
             vertical-align: top;
-            width: 90px;
+            width: 95px;
         }
     }
 
@@ -148,7 +149,7 @@ body {
 
                 li {
                     display: inline-block;
-                    margin: 8px;
+                    margin: 10px;
 
                     &.active {
                         color: $purple;
