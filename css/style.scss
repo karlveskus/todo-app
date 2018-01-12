@@ -1,3 +1,138 @@
+$purple: #844AED;
+$orange: #F39900;
+$gray: #F6F6F6;
+$dark-gray: #EFEFEF;
+$line-gray: #E3E3E3;
+$text-gray: #A7A7A7;
+
+html, body {
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+    font-style: normal;
+    font-weight: 300;
+    height: 100%;
+    margin: 0;
+    width: 100%;
+}
+
 body {
-    background: #8475E5;
+    background: $purple;
+    color: $text-gray;
+
+    img {
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: -1;
+    }
+
+    h1 {
+        color: $purple;
+        font-size: 45px;
+        font-weight: 400;
+        margin-top: 100px;
+        text-align: center;
+    }
+
+    div.new-task {
+        text-align: center;
+
+        input {
+            border: 0;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+            box-sizing: border-box;
+            height: 30px;
+            width: 250px;
+        }
+
+        button {
+            background: $purple;
+            border: 0;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+            box-sizing: border-box;
+            color: $gray;
+            height: 30px;
+            margin-left: 10px;
+            padding: 0 10px;
+            vertical-align: top;
+        }
+    }
+
+    section {
+        background: $gray;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+        margin: 20px auto;
+        width: 500px;
+
+        .heading {
+            background: $dark-gray;
+            border-bottom: 1px solid $line-gray;
+            padding: 15px;
+            position: relative;
+
+            p {
+                margin: 0;
+
+                .bold {
+                    font-weight: 400;
+                }
+
+                &#date {
+                    color: $purple;
+                    font-size: 21px;
+                }
+
+                &#month {
+                    font-size: 15px;
+                }
+
+                &#task-count {
+                    position: absolute;
+                    right: 15px;
+                    top: 25px;
+                }
+            }
+        }
+
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+
+            &#task-list {
+                li {
+                    border-bottom: 1px solid $line-gray;
+                    padding: 15px;
+
+                    input {
+                        margin: 0;
+                    }
+
+                    p {
+                        display: inline-block;
+                        margin: 0 0 0 10px;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        vertical-align: bottom;
+                        white-space: nowrap;
+                        width: 90%;
+                    }
+                }
+            }
+
+            &.show-menu {
+                text-align: center;
+
+                li {
+                    display: inline-block;
+                    margin: 6px;
+
+                    &.active {
+                        color: $purple;
+                    }
+                }
+            }
+        }
+    }
 }

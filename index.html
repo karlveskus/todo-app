@@ -3,15 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Todo app</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400" rel="stylesheet">
     <script src="dist/app.bundle.js"></script>
 </head>
 <body>
-    <h1>Todo app</h1>
+    <img src="img/orange-bg.svg" />
+    <h1>Just another Todo app</h1>
+    <div class="new-task">
+        <input id="new-task-input"/>
+        <button id="new-task-button">New task</button>
+    </div>
+    
     <section id="app">
-        <p id="date">Friday, 12th</p>
-        <p id="month">January</p>
-        <p id="tast-count">4 Tasks</p>
-        <ul>
+        <div class="heading">
+            <p id="date"><span class="bold">Friday,</span> 12th</p>
+            <p id="month">January</p>
+            <p id="task-count"><span class="bold">4</span> Tasks</p>
+        </div>
+        <ul id="task-list">
             <li>
                 <input type="checkbox" />
                 <p>Clean a room</p>
@@ -20,6 +29,11 @@
                 <input type="checkbox" />
                 <p>Buy cheese</p>
             </li>
+        </ul>
+        <ul class="show-menu">
+            <li id="show-all" class="active">All</li>
+            <li id="show-active">Active</li>
+            <li id="show-completed">Completed</li>
         </ul>
     </section>
 </body>
