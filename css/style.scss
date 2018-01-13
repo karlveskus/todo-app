@@ -185,6 +185,10 @@ body {
                         vertical-align: middle;
                         white-space: nowrap;
                         width: 80%;
+
+                        &.completed {
+                            text-decoration: line-through;
+                        }
                     }
 
                     &:hover {

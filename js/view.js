@@ -1,6 +1,7 @@
 (function IIFE(global) {
   var helpers;
   var model;
+  var taskElements = {};
 
   const dateText = document.getElementById('date');
   const monthText = document.getElementById('month');
@@ -19,17 +20,45 @@
     taskCountText.innerHTML = `${taskCount} Active tasks`;
   }
 
-  function addNewTask(taskId, taskDescription) {
+  function addNewTask(taskId, taskDescription, completed) {
+    let checkbox;
     let task = document.createElement('li');
+
     task.innerHTML = `
       <div class="checkbox">
-          <input type="checkbox" value="None" id="checkbox-${taskId}" name="check" />
+          <input type="checkbox" value="None" id="checkbox-${taskId}" name="check"/>
           <label for="checkbox-${taskId}"></label>
       </div>
-      <p>${taskDescription}</p>
+      <p class="${completed ? 'completed' : ''}">${taskDescription}</p>
     `;
 
+    taskElements[taskId] = task;
+
+    checkbox = task.firstElementChild.firstElementChild;
+
+    if (completed) {
+      checkbox.checked = true;
+    } else {
+      checkbox.checked = false;
+    }
+
+    checkbox.addEventListener('click', (e) => {
+      let taskId = Number(e.target.id.split('-')[1]);
+      model.switchTaskStatus(taskId);
+    });
+
     taskList.insertBefore(task, taskList.firstChild);
+  }
+
+  function switchTaskStatus(taskId, completed) {
+    var taskElement = taskElements[taskId];
+
+    if (completed === true) {
+      taskElement.lastElementChild.className = 'completed';
+    } else {
+      taskElement.lastElementChild.className = '';
+    }
+
   }
 
   function setEventListeners() {
@@ -55,7 +84,7 @@
     setTasksCount(Object.keys(tasks).length);
 
     Object.keys(tasks).forEach((key) => {
-      addNewTask(key, tasks[key]);
+      addNewTask(key, tasks[key].description, tasks[key].completed);
     });
   }
 
@@ -63,6 +92,7 @@
     init: initView,
     addNewTask,
     setTasksCount,
+    switchTaskStatus,
   };
 
   global.app = global.app || {};
