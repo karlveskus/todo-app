@@ -3,9 +3,9 @@
 html, body {
     box-sizing: border-box;
     font-family: 'Roboto', sans-serif;
+    font-size: 17px;
     font-style: normal;
     font-weight: 100;
-    font-size: 17px;
     height: 100%;
     margin: 0;
     width: 100%;
@@ -37,8 +37,8 @@ body {
     }
 
     div.new-task {
-        text-align: center;
         margin-top: 40px;
+        text-align: center;
 
         input {
             border: 0;
@@ -49,13 +49,13 @@ body {
             font-size: 18px;
             font-weight: 100;
             height: 36px;
+            margin: 0 0 0 10px;
             outline: none;
             padding: 0 15px;
             width: 265px;
-            margin: 0;
 
             @media (max-width: 500px) {
-                width: calc(100% - 135px);
+                width: calc(100% - 130px);
             }
 
             &::placeholder {
@@ -73,9 +73,10 @@ body {
             font-size: 18px;
             font-weight: 100;
             height: 36px;
+            margin: 0 10px 0 0;
             outline: none;
             vertical-align: top;
-            width: 100px;
+            width: 110px;
 
             &:hover, &:active {
                 background: $dark-purple;
@@ -86,10 +87,10 @@ body {
 
     section {
         background: $gray;
-        box-shadow: $box-shadow;
-        margin: 20px auto;
-        width: 500px;
         border-radius: 5px;
+        box-shadow: $box-shadow;
+        margin: 10px auto 30px !important;
+        width: 500px;
 
         @media (max-width: 500px) {
             width: 100%;
