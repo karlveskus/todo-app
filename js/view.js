@@ -51,7 +51,8 @@
 
   function setEventListeners() {
     newTaskButton.addEventListener('click', newTaskClickHandler);
-    taskList.addEventListener('DOMNodeInserted', taskCountChangeHandler);
+    taskList.addEventListener('DOMNodeInserted', taskListChangeHandler);
+    taskList.addEventListener('DOMNodeRemoved', taskListChangeHandler);
 
     function newTaskClickHandler() {
       let description = newTaskInput.value;
@@ -59,19 +60,17 @@
       if (description.length > 0) {
         model.addTask(description, (taskId) => {
           addNewTask(taskId, description, false);
-
-          model.getTasks((tasks) => {
-            let taskCount = Object.keys(tasks).length;
-            setTasksCount(taskCount);
-          });
         });
-      }
 
-      newTaskInput.value = '';
+        newTaskInput.value = '';
+      }
     }
 
-    function taskCountChangeHandler() {
-      if (Object.keys(taskElements).length === 0) {
+    function taskListChangeHandler() {
+      let taskCount = Object.keys(taskElements).length;
+      setTasksCount(taskCount);
+
+      if (taskCount === 0) {
         setEmptyTaskListMessage();
       } else {
         removeEmptyTaskListMessage();
@@ -95,11 +94,8 @@
     setEventListeners();
     setDateAndMonth();
 
-    model.getTasks((tasks) => {
-      let taskCount = Object.keys(tasks).length;
-      setTasksCount(taskCount);
-
-      Object.keys(tasks).forEach((key) => {
+    model.getTasks(function addTasks(tasks) {
+      Object.keys(tasks).forEach(function addTask(key) {
         addNewTask(key, tasks[key].description, tasks[key].completed);
       });
     });
