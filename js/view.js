@@ -26,7 +26,7 @@
 
     task.innerHTML = `
       <div class="checkbox">
-          <input type="checkbox" value="None" id="checkbox-${taskId}" name="check"/>
+          <input type="checkbox" value="None" id="checkbox-${taskId}" name="check" ${completed ? 'checked' : ''}/>
           <label for="checkbox-${taskId}"></label>
       </div>
       <p class="${completed ? 'completed' : ''}">${taskDescription}</p>
@@ -35,10 +35,10 @@
     taskElements[taskId] = task;
 
     checkbox = task.firstElementChild.firstElementChild;
-    checkbox.checked = Boolean(completed);
-    checkbox.addEventListener('click', function switchTaskStatus(e) {
-      let taskId = Number(e.target.id.split('-')[1]);
-      model.switchTaskStatus(taskId);
+    checkbox.addEventListener('click', function switchModelStatus() {
+      model.switchTaskStatus(taskId, function switchViewStatus(completed) {
+        switchTaskStatus(taskId, completed);
+      });
     });
 
     taskList.insertBefore(task, taskList.firstChild);
@@ -57,7 +57,14 @@
       let description = newTaskInput.value;
 
       if (description.length > 0) {
-        model.addTask(description);
+        model.addTask(description, (taskId) => {
+          addNewTask(taskId, description, false);
+
+          model.getTasks((tasks) => {
+            let taskCount = Object.keys(tasks).length;
+            setTasksCount(taskCount);
+          });
+        });
       }
 
       newTaskInput.value = '';
@@ -81,30 +88,25 @@
   }
 
   function initView() {
-    let tasks;
-    let taskCount;
-
     helpers = global.app.helpers;
     model = global.app.model;
-
-    tasks = model.getTasks();
-    taskCount = Object.keys(tasks).length;
 
     setEmptyTaskListMessage();
     setEventListeners();
     setDateAndMonth();
-    setTasksCount(taskCount);
 
-    Object.keys(tasks).forEach((key) => {
-      addNewTask(key, tasks[key].description, tasks[key].completed);
+    model.getTasks((tasks) => {
+      let taskCount = Object.keys(tasks).length;
+      setTasksCount(taskCount);
+
+      Object.keys(tasks).forEach((key) => {
+        addNewTask(key, tasks[key].description, tasks[key].completed);
+      });
     });
   }
 
   let publicAPI = {
     init: initView,
-    addNewTask,
-    setTasksCount,
-    switchTaskStatus,
   };
 
   global.app = global.app || {};

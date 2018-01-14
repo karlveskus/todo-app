@@ -1,39 +1,35 @@
 (function IIFE(global) {
   var tasks;
-  var view;
 
-  function addTask(description, completed) {
+  function addTask(description, callback) {
     let taskId = Object.keys(tasks).length;
 
     tasks[taskId] = {
       description,
-      completed,
+      completed: false,
     };
     localStorage.setItem('tasks', JSON.stringify(tasks));
 
-    view.addNewTask(taskId, description, completed);
-    view.setTasksCount(Object.keys(tasks).length);
-
-    return taskId;
+    callback(taskId);
   }
 
-  function getTasks() {
+  function getTasks(callback) {
     let tasks = localStorage.getItem('tasks');
-    return JSON.parse(tasks);
+
+    callback(JSON.parse(tasks));
   }
 
-  function switchTaskStatus(taskId) {
-    let completed = tasks[taskId].completed;
-    tasks[taskId].completed = !completed;
+  function switchTaskStatus(taskId, callback) {
+    let swappedStatus = !tasks[taskId].completed;
+    tasks[taskId].completed = swappedStatus;
     localStorage.setItem('tasks', JSON.stringify(tasks));
 
-    view.switchTaskStatus(taskId, !completed);
+    callback(swappedStatus);
   }
 
   function init() {
     let localStorageTasks;
 
-    view = global.app.view;
     localStorageTasks = localStorage.getItem('tasks');
 
     if (localStorageTasks) {
