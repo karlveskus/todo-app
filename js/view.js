@@ -46,7 +46,12 @@
 
   function switchTaskStatus(taskId, completed) {
     let taskElement = taskElements[taskId].lastElementChild;
-    taskElement.className = completed ? 'completed' : '';
+
+    if (completed) {
+      taskElement.className = 'completed';
+    } else {
+      taskElement.className = '';
+    }
   }
 
   function setEventListeners() {
@@ -71,26 +76,28 @@
       setTasksCount(taskCount);
 
       if (taskCount === 0) {
-        setEmptyTaskListMessage();
+        toggleEmptyTaskListMessage(true);
       } else {
-        removeEmptyTaskListMessage();
+        toggleEmptyTaskListMessage(false);
       }
     }
   }
 
-  function setEmptyTaskListMessage() {
-    taskList.innerHTML = '<p class="empty-list-message">You todo list is currently empty</p>';
-  }
+  function toggleEmptyTaskListMessage(show) {
+    let emptyListMessage = taskList.getElementsByClassName('empty-list-message')[0];
 
-  function removeEmptyTaskListMessage() {
-    taskList.getElementsByClassName('empty-list-message')[0].innerHTML = '';
+    if (show) {
+      emptyListMessage.style.display = 'block';
+    } else {
+      emptyListMessage.style.display = 'none';
+    }
   }
 
   function initView() {
     helpers = global.app.helpers;
     model = global.app.model;
 
-    setEmptyTaskListMessage();
+    toggleEmptyTaskListMessage(true);
     setEventListeners();
     setDateAndMonth();
 
