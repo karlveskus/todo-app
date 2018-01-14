@@ -35,14 +35,8 @@
     taskElements[taskId] = task;
 
     checkbox = task.firstElementChild.firstElementChild;
-
-    if (completed) {
-      checkbox.checked = true;
-    } else {
-      checkbox.checked = false;
-    }
-
-    checkbox.addEventListener('click', (e) => {
+    checkbox.checked = Boolean(completed);
+    checkbox.addEventListener('click', function switchTaskStatus(e) {
       let taskId = Number(e.target.id.split('-')[1]);
       model.switchTaskStatus(taskId);
     });
@@ -51,24 +45,22 @@
   }
 
   function switchTaskStatus(taskId, completed) {
-    var taskElement = taskElements[taskId];
-
-    if (completed === true) {
-      taskElement.lastElementChild.className = 'completed';
-    } else {
-      taskElement.lastElementChild.className = '';
-    }
-
+    let taskElement = taskElements[taskId].lastElementChild;
+    taskElement.className = completed ? 'completed' : '';
   }
 
   function setEventListeners() {
-    newTaskButton.addEventListener('click', () => {
-      let taskDescription = newTaskInput.value;
+    newTaskButton.addEventListener('click', newTaskClickHandler);
 
-      if (taskDescription.length > 0) {
-        model.addTask(taskDescription);
+    function newTaskClickHandler() {
+      let description = newTaskInput.value;
+
+      if (description.length > 0) {
+        model.addTask(description);
       }
-    });
+
+      newTaskInput.value = '';
+    }
   }
 
   function initView() {
