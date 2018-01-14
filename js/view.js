@@ -51,6 +51,7 @@
 
   function setEventListeners() {
     newTaskButton.addEventListener('click', newTaskClickHandler);
+    taskList.addEventListener('DOMNodeInserted', taskCountChangeHandler);
 
     function newTaskClickHandler() {
       let description = newTaskInput.value;
@@ -61,19 +62,38 @@
 
       newTaskInput.value = '';
     }
+
+    function taskCountChangeHandler() {
+      if (Object.keys(taskElements).length === 0) {
+        setEmptyTaskListMessage();
+      } else {
+        removeEmptyTaskListMessage();
+      }
+    }
+  }
+
+  function setEmptyTaskListMessage() {
+    taskList.innerHTML = '<p class="empty-list-message">You todo list is currently empty</p>';
+  }
+
+  function removeEmptyTaskListMessage() {
+    taskList.getElementsByClassName('empty-list-message')[0].innerHTML = '';
   }
 
   function initView() {
     let tasks;
+    let taskCount;
 
     helpers = global.app.helpers;
     model = global.app.model;
 
+    tasks = model.getTasks();
+    taskCount = Object.keys(tasks).length;
+
+    setEmptyTaskListMessage();
     setEventListeners();
     setDateAndMonth();
-
-    tasks = model.getTasks();
-    setTasksCount(Object.keys(tasks).length);
+    setTasksCount(taskCount);
 
     Object.keys(tasks).forEach((key) => {
       addNewTask(key, tasks[key].description, tasks[key].completed);

@@ -191,6 +191,7 @@ body {
                     p {
                         display: inline-block;
                         font-size: 20px;
+                        font-weight: 300;
                         margin: 0 0 0 10px;
                         overflow: hidden;
                         position: relative;
@@ -198,7 +199,6 @@ body {
                         vertical-align: middle;
                         white-space: nowrap;
                         width: 80%;
-                        font-weight: 300;
 
                         &.completed {
                             text-decoration: line-through;
@@ -208,6 +208,11 @@ body {
                     &:hover {
                         background: $heading-gray;
                     }
+                }
+
+                p.empty-list-message {
+                    margin: 20px;
+                    text-align: center;
                 }
             }
 
