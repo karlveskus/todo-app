@@ -1,5 +1,5 @@
 (function IIFE(global) {
-  var tasks;
+  var tasks = {};
 
   function addTask(description, callback) {
     let taskId = Object.keys(tasks).length;
@@ -19,6 +19,28 @@
     callback(JSON.parse(tasks));
   }
 
+  function getCompletedTaskIds(callback) {
+    return callback(filterTasksByComplitionStatus(true));
+  }
+
+  function getActiveTaskIds(callback) {
+    return callback(filterTasksByComplitionStatus(false));
+  }
+
+  function filterTasksByComplitionStatus(completed) {
+    let taskIds = [];
+
+    getTasks((tasks) => {
+      Object.entries(tasks).forEach((task) => {
+        if (task[1].completed === completed) {
+          taskIds.push(task[0]);
+        }
+      });
+    });
+
+    return taskIds;
+  }
+
   function switchTaskStatus(taskId, callback) {
     let swappedStatus = !tasks[taskId].completed;
     tasks[taskId].completed = swappedStatus;
@@ -36,7 +58,6 @@
       tasks = JSON.parse(localStorageTasks);
     } else {
       localStorage.setItem('tasks', JSON.stringify({}));
-      tasks = {};
     }
   }
 
@@ -45,6 +66,8 @@
     getTasks,
     addTask,
     switchTaskStatus,
+    getCompletedTaskIds,
+    getActiveTaskIds,
   };
 
   global.app = global.app || {};

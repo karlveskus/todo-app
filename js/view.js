@@ -9,6 +9,11 @@
   const newTaskInput = document.getElementById('new-task-input');
   const newTaskButton = document.getElementById('new-task-button');
   const taskList = document.getElementById('task-list');
+  const showAll = document.getElementById('show-all');
+  const showActive = document.getElementById('show-active');
+  const showCompleted = document.getElementById('show-completed');
+
+  const emptyListMessage = taskList.querySelector('.empty-list-message');
 
   function setDateAndMonth() {
     let [day, date] = helpers.getCurrentDay();
@@ -35,7 +40,7 @@
     taskElements[taskId] = task;
 
     checkbox = task.firstElementChild.firstElementChild;
-    checkbox.addEventListener('click', function switchModelStatus() {
+    checkbox.addEventListener('click', function switchModelAndViewStatus() {
       model.switchTaskStatus(taskId, function switchViewStatus(completed) {
         switchTaskStatus(taskId, completed);
       });
@@ -56,8 +61,13 @@
 
   function setEventListeners() {
     newTaskButton.addEventListener('click', newTaskClickHandler);
+
     taskList.addEventListener('DOMNodeInserted', taskListChangeHandler);
     taskList.addEventListener('DOMNodeRemoved', taskListChangeHandler);
+
+    showAll.addEventListener('click', showAllTasks);
+    showActive.addEventListener('click', showActiveTasks);
+    showCompleted.addEventListener('click', showCompletedTasks);
 
     function newTaskClickHandler() {
       let description = newTaskInput.value;
@@ -76,20 +86,38 @@
       setTasksCount(taskCount);
 
       if (taskCount === 0) {
-        toggleEmptyTaskListMessage(true);
+        helpers.showElement(emptyListMessage);
       } else {
-        toggleEmptyTaskListMessage(false);
+        helpers.hideElement(emptyListMessage);
       }
     }
-  }
 
-  function toggleEmptyTaskListMessage(show) {
-    let emptyListMessage = taskList.getElementsByClassName('empty-list-message')[0];
+    function showAllTasks() {
+      Object.entries(taskElements).forEach((task) => {
+        helpers.showElement(task[1]);
+      });
+    }
 
-    if (show) {
-      emptyListMessage.style.display = 'block';
-    } else {
-      emptyListMessage.style.display = 'none';
+    function showCompletedTasks() {
+      model.getCompletedTaskIds((completedTaskIds) => {
+        filterTasks(completedTaskIds);
+      });
+    }
+
+    function showActiveTasks() {
+      model.getActiveTaskIds((activeTaskIds) => {
+        filterTasks(activeTaskIds);
+      });
+    }
+
+    function filterTasks(taskIds) {
+      Object.entries(taskElements).forEach(([taskId, taskElement]) => {
+        if (taskIds.includes(taskId)) {
+          helpers.showElement(taskElement);
+        } else {
+          helpers.hideElement(taskElement);
+        }
+      });
     }
   }
 
@@ -97,7 +125,7 @@
     helpers = global.app.helpers;
     model = global.app.model;
 
-    toggleEmptyTaskListMessage(true);
+    helpers.showElement(emptyListMessage);
     setEventListeners();
     setDateAndMonth();
 
