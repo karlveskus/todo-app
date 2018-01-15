@@ -1,9 +1,11 @@
 (function setHelpers(global) {
   function getCurrentDay() {
+    // TODO
     return ['Friday', '12th'];
   }
 
   function getCurrentMonth() {
+    // TODO
     return 'January';
   }
 

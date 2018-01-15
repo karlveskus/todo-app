@@ -1,7 +1,8 @@
 (function IIFE(global) {
   var helpers;
   var model;
-  var taskElements = {};
+  var taskElements = {}; // {id: DOMElement}
+  var publicAPI;
 
   const dateText = document.getElementById('date');
   const monthText = document.getElementById('month');
@@ -17,46 +18,51 @@
 
   function setDateAndMonth() {
     let [day, date] = helpers.getCurrentDay();
+    let month = helpers.getCurrentMonth();
+
     dateText.innerHTML = `<span class="day">${day},</span> ${date}`;
-    monthText.innerHTML = helpers.getCurrentMonth();
+    monthText.innerHTML = month;
   }
 
   function setTasksCount(taskCount) {
     taskCountText.innerHTML = `${taskCount} Active tasks`;
   }
 
-  function addNewTask(taskId, taskDescription, completed) {
+  function addNewTask(id, description, isCompleted) {
     let checkbox;
     let task = document.createElement('li');
 
     task.innerHTML = `
       <div class="checkbox">
-          <input type="checkbox" value="None" id="checkbox-${taskId}" name="check" ${completed ? 'checked' : ''}/>
-          <label for="checkbox-${taskId}"></label>
+          <input type="checkbox" value="None" id="checkbox-${id}" name="check" ${isCompleted ? 'checked' : ''}/>
+          <label for="checkbox-${id}"></label>
       </div>
-      <p class="${completed ? 'completed' : ''}">${taskDescription}</p>
+      <p class="${isCompleted ? 'completed' : ''}">${description}</p>
     `;
 
-    taskElements[taskId] = task;
+    taskElements[id] = task;
 
-    checkbox = task.firstElementChild.firstElementChild;
-    checkbox.addEventListener('click', function switchModelAndViewStatus() {
-      model.switchTaskStatus(taskId, function switchViewStatus(completed) {
-        switchTaskStatus(taskId, completed);
-      });
-    });
+    checkbox = task.querySelector('input');
+    checkbox.addEventListener('click', () => switchTaskStatus(id));
 
     taskList.insertBefore(task, taskList.firstChild);
   }
 
-  function switchTaskStatus(taskId, completed) {
-    let taskElement = taskElements[taskId].lastElementChild;
+  function switchTaskStatus(id) {
+    let taskTextElement = taskElements[id].lastElementChild;
 
-    if (completed) {
-      taskElement.className = 'completed';
-    } else {
-      taskElement.className = '';
-    }
+    model.switchTaskStatus(id, function toggleCompletedClassName(isCompleted) {
+      if (isCompleted === true) {
+        taskTextElement.className = 'completed';
+      } else {
+        taskTextElement.className = '';
+      }
+      updateActiveTasksCount();
+    });
+  }
+
+  function updateActiveTasksCount() {
+    model.getActiveTaskCount(setTasksCount);
   }
 
   function setEventListeners() {
@@ -83,7 +89,7 @@
 
     function taskListChangeHandler() {
       let taskCount = Object.keys(taskElements).length;
-      setTasksCount(taskCount);
+      updateActiveTasksCount();
 
       if (taskCount === 0) {
         helpers.showElement(emptyListMessage);
@@ -121,7 +127,7 @@
     }
   }
 
-  function initView() {
+  function init() {
     helpers = global.app.helpers;
     model = global.app.model;
 
@@ -136,8 +142,8 @@
     });
   }
 
-  let publicAPI = {
-    init: initView,
+  publicAPI = {
+    init,
   };
 
   global.app = global.app || {};

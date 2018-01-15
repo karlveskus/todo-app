@@ -1,5 +1,6 @@
 (function IIFE(global) {
-  var tasks = {};
+  var tasks = {}; // {id: {description, completed}}
+  var publicAPI;
 
   function addTask(description, callback) {
     let taskId = Object.keys(tasks).length;
@@ -19,26 +20,25 @@
     callback(JSON.parse(tasks));
   }
 
+  function getActiveTaskCount(callback) {
+    callback(Object.entries(tasks)
+      .filter(task => task[1].completed === false)
+      .length);
+  }
+
   function getCompletedTaskIds(callback) {
-    return callback(filterTasksByComplitionStatus(true));
+    return filterTasksByStatus(true, callback);
   }
 
   function getActiveTaskIds(callback) {
-    return callback(filterTasksByComplitionStatus(false));
+    return filterTasksByStatus(false, callback);
   }
 
-  function filterTasksByComplitionStatus(completed) {
-    let taskIds = [];
-
+  function filterTasksByStatus(isCompleted, callback) {
     getTasks((tasks) => {
-      Object.entries(tasks).forEach((task) => {
-        if (task[1].completed === completed) {
-          taskIds.push(task[0]);
-        }
-      });
+      callback(Object.keys(tasks)
+        .filter(id => tasks[id].completed === isCompleted));
     });
-
-    return taskIds;
   }
 
   function switchTaskStatus(taskId, callback) {
@@ -61,13 +61,14 @@
     }
   }
 
-  let publicAPI = {
+  publicAPI = {
     init,
     getTasks,
     addTask,
     switchTaskStatus,
     getCompletedTaskIds,
     getActiveTaskIds,
+    getActiveTaskCount,
   };
 
   global.app = global.app || {};
