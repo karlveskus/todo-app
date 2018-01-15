@@ -34,7 +34,7 @@
 
     task.innerHTML = `
       <div class="checkbox">
-          <input type="checkbox" value="None" id="checkbox-${id}" name="check" ${isCompleted ? 'checked' : ''}/>
+          <input type="checkbox" id="checkbox-${id}" ${isCompleted ? 'checked' : ''}/>
           <label for="checkbox-${id}"></label>
       </div>
       <p class="${isCompleted ? 'completed' : ''}">${description}</p>
@@ -71,60 +71,79 @@
     taskList.addEventListener('DOMNodeInserted', taskListChangeHandler);
     taskList.addEventListener('DOMNodeRemoved', taskListChangeHandler);
 
-    showAll.addEventListener('click', showAllTasks);
-    showActive.addEventListener('click', showActiveTasks);
-    showCompleted.addEventListener('click', showCompletedTasks);
+    showAll.addEventListener('click', () => {
+      showAllTasks();
+      setFilterMenuActive(showAll);
+    });
+    showActive.addEventListener('click', () => {
+      showActiveTasks();
+      setFilterMenuActive(showActive);
+    });
+    showCompleted.addEventListener('click', () => {
+      showCompletedTasks();
+      setFilterMenuActive(showCompleted);
+    });
+  }
 
-    function newTaskClickHandler() {
-      let description = newTaskInput.value;
+  function newTaskClickHandler() {
+    let description = newTaskInput.value;
 
-      if (description.length > 0) {
-        model.addTask(description, (taskId) => {
-          addNewTask(taskId, description, false);
-        });
+    if (description.length > 0) {
+      model.addTask(description, (taskId) => {
+        addNewTask(taskId, description, false);
+      });
 
-        newTaskInput.value = '';
-      }
+      newTaskInput.value = '';
     }
+  }
 
-    function taskListChangeHandler() {
-      let taskCount = Object.keys(taskElements).length;
-      updateActiveTasksCount();
+  function taskListChangeHandler() {
+    let taskCount = Object.keys(taskElements).length;
+    updateActiveTasksCount();
 
-      if (taskCount === 0) {
-        helpers.showElement(emptyListMessage);
+    if (taskCount === 0) {
+      helpers.showElement(emptyListMessage);
+    } else {
+      helpers.hideElement(emptyListMessage);
+    }
+  }
+
+  function showAllTasks() {
+    Object.values(taskElements).forEach((task) => {
+      helpers.showElement(task);
+    });
+  }
+
+  function showActiveTasks() {
+    model.getActiveTaskIds((activeTaskIds) => {
+      filterTasks(activeTaskIds);
+    });
+  }
+
+  function showCompletedTasks() {
+    model.getCompletedTaskIds((completedTaskIds) => {
+      filterTasks(completedTaskIds);
+    });
+  }
+
+  function setFilterMenuActive(filter) {
+    [showAll, showActive, showCompleted].forEach((element) => {
+      if (element === filter) {
+        element.className = 'active';
       } else {
-        helpers.hideElement(emptyListMessage);
+        element.className = '';
       }
-    }
+    });
+  }
 
-    function showAllTasks() {
-      Object.entries(taskElements).forEach((task) => {
-        helpers.showElement(task[1]);
-      });
-    }
-
-    function showCompletedTasks() {
-      model.getCompletedTaskIds((completedTaskIds) => {
-        filterTasks(completedTaskIds);
-      });
-    }
-
-    function showActiveTasks() {
-      model.getActiveTaskIds((activeTaskIds) => {
-        filterTasks(activeTaskIds);
-      });
-    }
-
-    function filterTasks(taskIds) {
-      Object.entries(taskElements).forEach(([taskId, taskElement]) => {
-        if (taskIds.includes(taskId)) {
-          helpers.showElement(taskElement);
-        } else {
-          helpers.hideElement(taskElement);
-        }
-      });
-    }
+  function filterTasks(taskIds) {
+    Object.entries(taskElements).forEach(([taskId, taskElement]) => {
+      if (taskIds.includes(taskId)) {
+        helpers.showElement(taskElement);
+      } else {
+        helpers.hideElement(taskElement);
+      }
+    });
   }
 
   function init() {
@@ -136,8 +155,8 @@
     setDateAndMonth();
 
     model.getTasks(function addTasks(tasks) {
-      Object.keys(tasks).forEach(function addTask(key) {
-        addNewTask(key, tasks[key].description, tasks[key].completed);
+      Object.entries(tasks).forEach(([taskId, task]) => {
+        addNewTask(taskId, task.description, task.completed);
       });
     });
   }
