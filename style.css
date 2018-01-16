@@ -1,0 +1,188 @@
+html, body {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  height: 100%;
+  margin: 0;
+  width: 100%; }
+
+body {
+  background: #2c3e50;
+  color: #374A5C;
+  font-family: 'Roboto', sans-serif;
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 300; }
+  body img {
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: -1; }
+  body h1 {
+    color: #F6F6F6;
+    font-size: 45px;
+    font-weight: 100;
+    margin-top: 100px;
+    text-align: center; }
+    @media (max-width: 600px) {
+      body h1 {
+        margin-top: 25px;
+        font-size: 40px; } }
+    body h1 .line {
+      display: inline-block; }
+  body div.new-task {
+    margin-top: 40px;
+    padding: 0 10px;
+    text-align: center; }
+    @media (max-width: 600px) {
+      body div.new-task {
+        margin-top: 25px; } }
+    body div.new-task input {
+      border: 0;
+      border-radius: 5px 0 0 5px;
+      -webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+              box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+      -webkit-box-sizing: border-box;
+              box-sizing: border-box;
+      color: #27ae60;
+      font-size: 18px;
+      font-weight: 100;
+      height: 36px;
+      outline: none;
+      padding: 0 12px;
+      width: 265px; }
+      @media (max-width: 600px) {
+        body div.new-task input {
+          width: calc(100% - 110px);
+          border-radius: 0; } }
+      body div.new-task input::-webkit-input-placeholder {
+        color: #939393; }
+      body div.new-task input:-ms-input-placeholder {
+        color: #939393; }
+      body div.new-task input::-ms-input-placeholder {
+        color: #939393; }
+      body div.new-task input::placeholder {
+        color: #939393; }
+    body div.new-task button {
+      background: #2CC36B;
+      border: 0;
+      border-radius: 0 5px 5px 0;
+      -webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+              box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+      -webkit-box-sizing: border-box;
+              box-sizing: border-box;
+      color: #F6F6F6;
+      font-size: 18px;
+      font-weight: 100;
+      height: 36px;
+      outline: none;
+      padding: 0;
+      vertical-align: top;
+      width: 110px; }
+      @media (max-width: 600px) {
+        body div.new-task button {
+          border-radius: 0; } }
+      body div.new-task button:hover, body div.new-task button:active {
+        background: #27ae60;
+        cursor: pointer;
+        -webkit-transition: background 0.15s ease-in 0s;
+        transition: background 0.15s ease-in 0s; }
+  body section {
+    background: #F6F6F6;
+    border-radius: 5px;
+    -webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    margin: 20px auto 100px;
+    width: 500px; }
+    @media (max-width: 600px) {
+      body section {
+        width: 100%;
+        border-radius: 0;
+        margin: 10px auto 30px; } }
+    body section .heading {
+      background: #EFEFEF;
+      border-bottom: 1px solid #E0E0E0;
+      border-radius: 5px 5px 0 0;
+      padding: 15px;
+      position: relative; }
+      body section .heading p {
+        margin: 0; }
+        body section .heading p#date {
+          color: #2CC36B;
+          font-size: 21px; }
+          body section .heading p#date .day {
+            font-weight: 300; }
+        body section .heading p#month {
+          font-size: 16px; }
+        body section .heading p#task-count {
+          position: absolute;
+          right: 15px;
+          top: 27px; }
+    body section ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0; }
+      body section ul#task-list li {
+        border-bottom: 1px solid #E0E0E0;
+        padding: 20px 15px; }
+        body section ul#task-list li .checkbox {
+          display: inline-block;
+          position: relative;
+          vertical-align: middle;
+          width: 20px; }
+          body section ul#task-list li .checkbox label {
+            background: white;
+            border: 1px solid #374A5C;
+            border-radius: 4px;
+            cursor: pointer;
+            height: 18px;
+            left: 0;
+            position: absolute;
+            top: 1px;
+            width: 18px; }
+            body section ul#task-list li .checkbox label:after {
+              border: 3px solid #374A5C;
+              border-right: none;
+              border-top: none;
+              content: '';
+              height: 4px;
+              left: 4px;
+              opacity: 0;
+              position: absolute;
+              top: 4px;
+              -webkit-transform: rotate(-45deg);
+                      transform: rotate(-45deg);
+              width: 8px; }
+          body section ul#task-list li .checkbox input[type=checkbox] {
+            visibility: hidden; }
+            body section ul#task-list li .checkbox input[type=checkbox]:checked + label:after {
+              opacity: 1; }
+        body section ul#task-list li p {
+          display: inline-block;
+          font-size: 20px;
+          font-weight: 300;
+          margin: 0 0 0 10px;
+          overflow: hidden;
+          position: relative;
+          text-overflow: ellipsis;
+          vertical-align: middle;
+          white-space: nowrap;
+          width: 80%; }
+          body section ul#task-list li p.completed {
+            text-decoration: line-through; }
+        body section ul#task-list li:hover {
+          background: #EFEFEF; }
+      body section ul#task-list p.empty-list-message {
+        margin: 20px;
+        text-align: center; }
+      body section ul.show-menu {
+        text-align: center; }
+        body section ul.show-menu li {
+          display: inline-block;
+          margin: 5px;
+          padding: 5px; }
+          body section ul.show-menu li.active {
+            color: #2CC36B; }
+          body section ul.show-menu li:hover {
+            color: #2CC36B;
+            cursor: pointer; }
