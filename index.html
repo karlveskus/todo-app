@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo app</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <img src="img/dark-bg-vector.svg" />
+    <h1><span class="line">Just another</span> <span class="line">Todo app</span></h1>
+    <div class="new-task">
+        <input id="new-task-input" placeholder="Task description.."/><button id="new-task-button">New task</button>
+    </div>
+    
+    <section>
+        <div class="heading">
+            <p id="date"></p>
+            <p id="month"></p>
+            <p id="task-count"></p>
+        </div>
+        <ul id="task-list">
+            <p class="empty-list-message">You todo list is currently empty</p>
+        </ul>
+        <ul class="show-menu">
+            <li id="show-all" class="active">All</li>
+            <li id="show-active">Active</li>
+            <li id="show-completed">Completed</li>
+        </ul>
+    </section>
+    <script src="js/app.bundle.js"></script>
+</body>
+</html>
