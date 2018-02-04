@@ -4,7 +4,7 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-  entry: ['./js/index.js', './js/app.js',
+  entry: ['./js/app.js',
     './css/style.scss', './css/variables.scss',
   ],
   output: {

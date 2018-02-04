@@ -1,6 +1,7 @@
-(function IIFE(global) {
-  var helpers;
-  var model;
+import helpers from './helpers';
+import model from './model';
+
+function View() {
   var taskElements = {}; // {id: DOMElement}
   var publicAPI;
 
@@ -147,9 +148,6 @@
   }
 
   function init() {
-    helpers = global.app.helpers;
-    model = global.app.model;
-
     helpers.showElement(emptyListMessage);
     setEventListeners();
     setDateAndMonth();
@@ -165,6 +163,7 @@
     init,
   };
 
-  global.app = global.app || {};
-  global.app.view = publicAPI;
-}(window));
+  return publicAPI;
+}
+
+export default View();

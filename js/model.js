@@ -1,4 +1,4 @@
-(function IIFE(global) {
+function Model() {
   var tasks = {}; // {id: {description, completed}}
   var publicAPI;
 
@@ -21,7 +21,8 @@
   }
 
   function getActiveTaskCount(callback) {
-    callback(Object.entries(tasks)
+    callback(Object
+      .entries(tasks)
       .filter(task => task[1].completed === false)
       .length);
   }
@@ -36,7 +37,8 @@
 
   function filterTasksByStatus(isCompleted, callback) {
     getTasks((tasks) => {
-      callback(Object.keys(tasks)
+      callback(Object
+        .keys(tasks)
         .filter(id => tasks[id].completed === isCompleted));
     });
   }
@@ -71,6 +73,7 @@
     getActiveTaskCount,
   };
 
-  global.app = global.app || {};
-  global.app.model = publicAPI;
-}(window));
+  return publicAPI;
+}
+
+export default Model();

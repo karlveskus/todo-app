@@ -1,4 +1,4 @@
-(function setHelpers(global) {
+function Helpers() {
   function getCurrentDay() {
     // TODO
     return ['Friday', '12th'];
@@ -24,6 +24,7 @@
     hideElement,
   };
 
-  global.app = global.app || {};
-  global.app.helpers = publicAPI;
-}(window));
+  return publicAPI;
+}
+
+export default Helpers();

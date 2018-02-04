@@ -3,7 +3,9 @@
   "globals": {
     "window": true,
     "document": true,
-    "localStorage": true
+    "localStorage": true,
+    "describe": true,
+    "it": true
   },
   "rules": {
     "no-var": 0,

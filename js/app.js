@@ -1,7 +1,7 @@
-(function IIFE(global) {
-  const view = global.app.view;
-  const model = global.app.model;
+import model from './model';
+import view from './view';
 
+(function IIFE(global) {
   function init() {
     model.init();
     view.init();
