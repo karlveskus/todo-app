@@ -17,12 +17,11 @@ function Model() {
   function getTasks(callback) {
     let tasks = localStorage.getItem('tasks');
 
-    callback(JSON.parse(tasks));
+    callback(JSON.parse(tasks) || {});
   }
 
   function getActiveTaskCount(callback) {
-    callback(Object
-      .entries(tasks)
+    callback(Object.entries(tasks)
       .filter(task => task[1].completed === false)
       .length);
   }
@@ -51,6 +50,11 @@ function Model() {
     callback(swappedStatus);
   }
 
+  function resetTasks() {
+    localStorage.removeItem('tasks');
+    tasks = {};
+  }
+
   function init() {
     let localStorageTasks;
 
@@ -60,6 +64,7 @@ function Model() {
       tasks = JSON.parse(localStorageTasks);
     } else {
       localStorage.setItem('tasks', JSON.stringify({}));
+      tasks = {};
     }
   }
 
@@ -71,6 +76,7 @@ function Model() {
     getCompletedTaskIds,
     getActiveTaskIds,
     getActiveTaskCount,
+    resetTasks,
   };
 
   return publicAPI;

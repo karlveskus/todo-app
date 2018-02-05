@@ -5,7 +5,8 @@
     "document": true,
     "localStorage": true,
     "describe": true,
-    "it": true
+    "it": true,
+    "beforeEach": true
   },
   "rules": {
     "no-var": 0,
