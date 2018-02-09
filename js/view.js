@@ -18,8 +18,9 @@ function View() {
   const emptyListMessage = taskList.querySelector('.empty-list-message');
 
   function setDateAndMonth() {
-    let [day, date] = helpers.getCurrentDay();
-    let month = helpers.getCurrentMonth();
+    let today = new Date();
+    let [day, date] = helpers.getCurrentDay(today);
+    let month = helpers.getCurrentMonth(today);
 
     dateText.innerHTML = `<span class="day">${day},</span> ${date}`;
     monthText.innerHTML = month;
