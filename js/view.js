@@ -69,6 +69,11 @@ function View() {
 
   function setEventListeners() {
     newTaskButton.addEventListener('click', newTaskClickHandler);
+    newTaskInput.addEventListener('keyup', (e) => {
+      if (e.keyCode === 13) {
+        newTaskButton.click();
+      }
+    });
 
     taskList.addEventListener('DOMNodeInserted', taskListChangeHandler);
     taskList.addEventListener('DOMNodeRemoved', taskListChangeHandler);
