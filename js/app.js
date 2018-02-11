@@ -1,10 +1,10 @@
-import model from './model';
-import view from './view';
+import Model from './model';
+import View from './view';
 
 (function IIFE(global) {
   function init() {
-    model.init();
-    view.init();
+    Model.init();
+    View.init();
   }
 
   global.addEventListener('load', init);

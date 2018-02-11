@@ -1,6 +1,8 @@
 function Model() {
-  var tasks = {}; // {id: {description, completed}}
-  var publicAPI;
+  const localStorageKey = 'tasks';
+
+  let tasks = {}; // {id: {description, completed}}
+  let publicAPI;
 
   function addTask(description, callback) {
     let taskId = Object.keys(tasks).length;
@@ -9,13 +11,13 @@ function Model() {
       description,
       completed: false,
     };
-    localStorage.setItem('tasks', JSON.stringify(tasks));
+    localStorage.setItem(localStorageKey, JSON.stringify(tasks));
 
     callback(taskId);
   }
 
   function getTasks(callback) {
-    let tasks = localStorage.getItem('tasks');
+    let tasks = localStorage.getItem(localStorageKey);
 
     callback(JSON.parse(tasks) || {});
   }
@@ -45,25 +47,25 @@ function Model() {
   function switchTaskStatus(taskId, callback) {
     let swappedStatus = !tasks[taskId].completed;
     tasks[taskId].completed = swappedStatus;
-    localStorage.setItem('tasks', JSON.stringify(tasks));
+    localStorage.setItem(localStorageKey, JSON.stringify(tasks));
 
     callback(swappedStatus);
   }
 
   function resetTasks() {
-    localStorage.removeItem('tasks');
+    localStorage.removeItem(localStorageKey);
     tasks = {};
   }
 
   function init() {
     let localStorageTasks;
 
-    localStorageTasks = localStorage.getItem('tasks');
+    localStorageTasks = localStorage.getItem(localStorageKey);
 
     if (localStorageTasks) {
       tasks = JSON.parse(localStorageTasks);
     } else {
-      localStorage.setItem('tasks', JSON.stringify({}));
+      localStorage.setItem(localStorageKey, JSON.stringify({}));
       tasks = {};
     }
   }

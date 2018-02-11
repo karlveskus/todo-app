@@ -1,9 +1,9 @@
-import helpers from './helpers';
-import model from './model';
+import Helpers from './helpers';
+import Model from './model';
 
 function View() {
-  var taskElements = {}; // {id: DOMElement}
-  var publicAPI;
+  let taskElements = {}; // {id: DOMElement}
+  let publicAPI;
 
   const dateText = document.getElementById('date');
   const monthText = document.getElementById('month');
@@ -19,8 +19,9 @@ function View() {
 
   function setDateAndMonth() {
     let today = new Date();
-    let [day, date] = helpers.getCurrentDay(today);
-    let month = helpers.getCurrentMonth(today);
+    let day = Helpers.getCurrentDay(today);
+    let date = Helpers.getCurrentDate(today);
+    let month = Helpers.getCurrentMonth(today);
 
     dateText.innerHTML = `<span class="day">${day},</span> ${date}`;
     monthText.innerHTML = month;
@@ -53,7 +54,7 @@ function View() {
   function switchTaskStatus(id) {
     let taskTextElement = taskElements[id].lastElementChild;
 
-    model.switchTaskStatus(id, function toggleCompletedClassName(isCompleted) {
+    Model.switchTaskStatus(id, function toggleCompletedClassName(isCompleted) {
       if (isCompleted === true) {
         taskTextElement.className = 'completed';
       } else {
@@ -64,7 +65,7 @@ function View() {
   }
 
   function updateActiveTasksCount() {
-    model.getActiveTaskCount(setTasksCount);
+    Model.getActiveTaskCount(setTasksCount);
   }
 
   function setEventListeners() {
@@ -96,7 +97,7 @@ function View() {
     let description = newTaskInput.value;
 
     if (description.length > 0) {
-      model.addTask(description, (taskId) => {
+      Model.addTask(description, (taskId) => {
         addNewTask(taskId, description, false);
       });
 
@@ -105,30 +106,31 @@ function View() {
   }
 
   function taskListChangeHandler() {
-    let taskCount = Object.keys(taskElements).length;
     updateActiveTasksCount();
 
-    if (taskCount === 0) {
-      helpers.showElement(emptyListMessage);
-    } else {
-      helpers.hideElement(emptyListMessage);
-    }
+    Model.getTasks((tasks) => {
+      if (Object.entries(tasks).length === 0) {
+        Helpers.showElement(emptyListMessage);
+      } else {
+        Helpers.hideElement(emptyListMessage);
+      }
+    });
   }
 
   function showAllTasks() {
     Object.values(taskElements).forEach((task) => {
-      helpers.showElement(task);
+      Helpers.showElement(task);
     });
   }
 
   function showActiveTasks() {
-    model.getActiveTaskIds((activeTaskIds) => {
+    Model.getActiveTaskIds((activeTaskIds) => {
       filterTasks(activeTaskIds);
     });
   }
 
   function showCompletedTasks() {
-    model.getCompletedTaskIds((completedTaskIds) => {
+    Model.getCompletedTaskIds((completedTaskIds) => {
       filterTasks(completedTaskIds);
     });
   }
@@ -146,19 +148,19 @@ function View() {
   function filterTasks(taskIds) {
     Object.entries(taskElements).forEach(([taskId, taskElement]) => {
       if (taskIds.includes(taskId)) {
-        helpers.showElement(taskElement);
+        Helpers.showElement(taskElement);
       } else {
-        helpers.hideElement(taskElement);
+        Helpers.hideElement(taskElement);
       }
     });
   }
 
   function init() {
-    helpers.showElement(emptyListMessage);
+    Helpers.showElement(emptyListMessage);
     setEventListeners();
     setDateAndMonth();
 
-    model.getTasks(function addTasks(tasks) {
+    Model.getTasks(function addTasks(tasks) {
       Object.entries(tasks).forEach(([taskId, task]) => {
         addNewTask(taskId, task.description, task.completed);
       });

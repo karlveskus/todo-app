@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 import 'babel-polyfill'; // Emulate a full ES2015+ environment
 import 'mock-local-storage'; // Mock localStorage
-import model from '../js/model';
+import Model from '../js/model';
 
 const task = {
   description: 'New Task',
@@ -9,40 +9,40 @@ const task = {
 };
 
 function addNewTask(callback) {
-  model.addTask(task.description, callback);
+  Model.addTask(task.description, callback);
 }
 
 function addCompletedTask(callback) {
   addNewTask((taskId) => {
-    model.switchTaskStatus(taskId, () => {
+    Model.switchTaskStatus(taskId, () => {
       callback(taskId);
     });
   });
 }
 
 function addNewTasks(callback) {
-  model.addTask(task.description, () => {
-    model.addTask(task.description, callback);
+  Model.addTask(task.description, () => {
+    Model.addTask(task.description, callback);
   });
 }
 
 function resetState() {
-  model.init();
-  model.resetTasks();
+  Model.init();
+  Model.resetTasks();
 }
 
 describe('getTasks()', () => {
   beforeEach(resetState);
 
   it('returns empty object if tasks are not set', () => {
-    model.getTasks((tasks) => {
+    Model.getTasks((tasks) => {
       assert.deepEqual(tasks, {});
     });
   });
 
   it('returns tasks object if tasks are set', () => {
     addNewTasks(() => {
-      model.getTasks((tasks) => {
+      Model.getTasks((tasks) => {
         assert.deepEqual(tasks, { 0: task, 1: task });
       });
     });
@@ -53,11 +53,11 @@ describe('addTask()', () => {
   beforeEach(resetState);
 
   it('increases task list length by 1', () => {
-    model.getTasks((initialTasks) => {
+    Model.getTasks((initialTasks) => {
       let expectedCount = Object.keys(initialTasks).length + 1;
 
       addNewTask(() => {
-        model.getTasks((newTasks) => {
+        Model.getTasks((newTasks) => {
           let newTaskCount = Object.keys(newTasks).length;
           assert.equal(newTaskCount, expectedCount);
         });
@@ -83,7 +83,7 @@ describe('switchTaskStatus()', () => {
 
   it('switches task status to completed', () => {
     addNewTask((taskId) => {
-      model.switchTaskStatus(taskId, (isCompleted) => {
+      Model.switchTaskStatus(taskId, (isCompleted) => {
         assert.equal(isCompleted, true);
       });
     });
@@ -91,7 +91,7 @@ describe('switchTaskStatus()', () => {
 
   it('switches task status to active', () => {
     addCompletedTask((taskId) => {
-      model.switchTaskStatus(taskId, (isCompleted) => {
+      Model.switchTaskStatus(taskId, (isCompleted) => {
         assert.equal(isCompleted, false);
       });
     });
@@ -102,14 +102,14 @@ describe('getActiveTaskCount()', () => {
   beforeEach(resetState);
 
   it('returns 0 if no active tasks', () => {
-    model.getActiveTaskCount((count) => {
+    Model.getActiveTaskCount((count) => {
       assert.equal(count, 0);
     });
   });
 
   it('returns active task count when no completed tasks exist', () => {
     addNewTasks(() => {
-      model.getActiveTaskCount((count) => {
+      Model.getActiveTaskCount((count) => {
         assert.strictEqual(count, 2);
       });
     });
@@ -118,7 +118,7 @@ describe('getActiveTaskCount()', () => {
   it('returns active task count when completed task exists', () => {
     addCompletedTask(() => {
       addNewTasks(() => {
-        model.getActiveTaskCount((count) => {
+        Model.getActiveTaskCount((count) => {
           assert.strictEqual(count, 2);
         });
       });
@@ -131,7 +131,7 @@ describe('getActiveTaskIds()', () => {
 
   it('returns empty list if no active tasks available', () => {
     addCompletedTask(() => {
-      model.getActiveTaskIds((activeTaskIds) => {
+      Model.getActiveTaskIds((activeTaskIds) => {
         let expected = [];
 
         assert.deepEqual(activeTaskIds, expected);
@@ -142,7 +142,7 @@ describe('getActiveTaskIds()', () => {
   it('returns list of active task Ids', () => {
     addNewTasks(() => {
       addCompletedTask(() => {
-        model.getActiveTaskIds((activeTaskIds) => {
+        Model.getActiveTaskIds((activeTaskIds) => {
           let expected = ['0', '1'];
 
           assert.deepEqual(activeTaskIds, expected);
@@ -157,7 +157,7 @@ describe('getCompletedTaskIds()', () => {
 
   it('returns empty list if no completed tasks available', () => {
     addNewTasks(() => {
-      model.getCompletedTaskIds((getCompletedTaskIds) => {
+      Model.getCompletedTaskIds((getCompletedTaskIds) => {
         let expected = [];
 
         assert.deepEqual(getCompletedTaskIds, expected);
@@ -168,7 +168,7 @@ describe('getCompletedTaskIds()', () => {
   it('returns list of active task Ids', () => {
     addNewTasks(() => {
       addCompletedTask(() => {
-        model.getCompletedTaskIds((getCompletedTaskIds) => {
+        Model.getCompletedTaskIds((getCompletedTaskIds) => {
           let expected = ['2'];
 
           assert.deepEqual(getCompletedTaskIds, expected);

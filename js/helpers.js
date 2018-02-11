@@ -1,28 +1,31 @@
 function Helpers() {
-  function getCurrentDay(inputDate) {
-    let days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    let day = days[inputDate.getDay()];
+  let publicAPI;
 
+  function getCurrentDay(date) {
+    let days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    let day = days[date.getDay()];
+
+    return day;
+  }
+
+  function getCurrentDate(inputDate) {
     let date = inputDate.getDate();
 
-    return [day, addSuffixToDate(date)];
-  }
-
-  function addSuffixToDate(i) {
-    let j = i % 10;
-    let k = i % 100;
+    let j = date % 10;
+    let k = date % 100;
 
     if (j === 1 && k !== 11) {
-      return `${i}st`;
+      return `${date}st`;
     }
     if (j === 2 && k !== 12) {
-      return `${i}nd`;
+      return `${date}nd`;
     }
     if (j === 3 && k !== 13) {
-      return `${i}rd`;
+      return `${date}rd`;
     }
-    return `${i}th`;
+    return `${date}th`;
   }
+
 
   function getCurrentMonth(inputDate) {
     let monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
@@ -39,8 +42,9 @@ function Helpers() {
     element.style.display = 'none';
   }
 
-  let publicAPI = {
+  publicAPI = {
     getCurrentDay,
+    getCurrentDate,
     getCurrentMonth,
     showElement,
     hideElement,
