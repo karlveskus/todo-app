@@ -1,83 +1,86 @@
 function Model() {
   const localStorageKey = 'tasks';
 
-  let tasks = {}; // {id: {description, completed}}
   let publicAPI;
 
   function addTask(description, callback) {
-    let taskId = Object.keys(tasks).length;
+    getTasks((tasks) => {
+      let taskId = Object.keys(tasks).length;
 
-    tasks[taskId] = {
-      description,
-      completed: false,
-    };
-    localStorage.setItem(localStorageKey, JSON.stringify(tasks));
+      tasks[taskId] = {
+        description,
+        completed: false,
+      };
+      setTasks(tasks);
 
-    callback(taskId);
-  }
-
-  function getTasks(callback) {
-    let tasks = localStorage.getItem(localStorageKey);
-
-    callback(JSON.parse(tasks) || {});
+      callback(taskId);
+    });
   }
 
   function getActiveTaskCount(callback) {
-    callback(Object.entries(tasks)
-      .filter(task => task[1].completed === false)
-      .length);
+    getTasks((tasks) => {
+      callback(Object.entries(tasks)
+        .filter(task => task[1].completed === false)
+        .length);
+    });
   }
 
   function getCompletedTaskIds(callback) {
-    return filterTasksByStatus(true, callback);
-  }
-
-  function getActiveTaskIds(callback) {
-    return filterTasksByStatus(false, callback);
-  }
-
-  function filterTasksByStatus(isCompleted, callback) {
     getTasks((tasks) => {
       callback(Object
         .keys(tasks)
-        .filter(id => tasks[id].completed === isCompleted));
+        .filter(id => tasks[id].completed === true));
+    });
+  }
+
+  function getActiveTaskIds(callback) {
+    getTasks((tasks) => {
+      callback(Object
+        .keys(tasks)
+        .filter(id => tasks[id].completed === false));
     });
   }
 
   function switchTaskStatus(taskId, callback) {
-    let swappedStatus = !tasks[taskId].completed;
-    tasks[taskId].completed = swappedStatus;
-    localStorage.setItem(localStorageKey, JSON.stringify(tasks));
+    getTasks((tasks) => {
+      let newStatus = !tasks[taskId].completed;
+      tasks[taskId].completed = newStatus;
+      setTasks(tasks);
 
-    callback(swappedStatus);
+      callback(newStatus);
+    });
+  }
+
+  function removeTask(id, callback) {
+    getTasks((tasks) => {
+      delete tasks[id];
+      setTasks(tasks);
+
+      callback(tasks);
+    });
   }
 
   function resetTasks() {
     localStorage.removeItem(localStorageKey);
-    tasks = {};
   }
 
-  function init() {
-    let localStorageTasks;
+  function getTasks(callback) {
+    let tasks = JSON.parse(localStorage.getItem(localStorageKey)) || {};
+    callback(tasks);
+  }
 
-    localStorageTasks = localStorage.getItem(localStorageKey);
-
-    if (localStorageTasks) {
-      tasks = JSON.parse(localStorageTasks);
-    } else {
-      localStorage.setItem(localStorageKey, JSON.stringify({}));
-      tasks = {};
-    }
+  function setTasks(tasksGot) {
+    localStorage.setItem(localStorageKey, JSON.stringify(tasksGot));
   }
 
   publicAPI = {
-    init,
     getTasks,
     addTask,
     switchTaskStatus,
     getCompletedTaskIds,
     getActiveTaskIds,
     getActiveTaskCount,
+    removeTask,
     resetTasks,
   };
 

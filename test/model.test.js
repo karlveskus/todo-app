@@ -14,9 +14,7 @@ function addNewTask(callback) {
 
 function addCompletedTask(callback) {
   addNewTask((taskId) => {
-    Model.switchTaskStatus(taskId, () => {
-      callback(taskId);
-    });
+    Model.switchTaskStatus(taskId, () => callback(taskId));
   });
 }
 
@@ -27,14 +25,13 @@ function addNewTasks(callback) {
 }
 
 function resetState() {
-  Model.init();
   Model.resetTasks();
 }
 
 describe('getTasks()', () => {
   beforeEach(resetState);
 
-  it('returns empty object if tasks are not set', () => {
+  it('returns an empty object if tasks are not set', () => {
     Model.getTasks((tasks) => {
       assert.deepEqual(tasks, {});
     });
@@ -52,28 +49,17 @@ describe('getTasks()', () => {
 describe('addTask()', () => {
   beforeEach(resetState);
 
-  it('increases task list length by 1', () => {
-    Model.getTasks((initialTasks) => {
-      let expectedCount = Object.keys(initialTasks).length + 1;
-
-      addNewTask(() => {
-        Model.getTasks((newTasks) => {
-          let newTaskCount = Object.keys(newTasks).length;
-          assert.equal(newTaskCount, expectedCount);
-        });
+  it('adds a new task to the empty task list', () => {
+    addNewTask(() => {
+      Model.getTasks((tasks) => {
+        assert.deepEqual(tasks, { 0: task });
       });
     });
   });
 
-  it('returns number of task ID after adding 1 task', () => {
+  it('returns the task ID when adding a new task', () => {
     addNewTask((taskId) => {
       assert.strictEqual(taskId, 0);
-    });
-  });
-
-  it('returns number of second task ID after adding 2 task', () => {
-    addNewTasks((taskId) => {
-      assert.strictEqual(taskId, 1);
     });
   });
 });
@@ -172,6 +158,21 @@ describe('getCompletedTaskIds()', () => {
           let expected = ['2'];
 
           assert.deepEqual(getCompletedTaskIds, expected);
+        });
+      });
+    });
+  });
+});
+
+describe('removeTask()', () => {
+  beforeEach(resetState);
+
+  it('removes task from tasks list', () => {
+    addNewTask((taskId) => {
+      Model.removeTask(taskId, () => {
+        Model.getTasks((tasks) => {
+          let expected = {};
+          assert.deepEqual(tasks, expected);
         });
       });
     });
