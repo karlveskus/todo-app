@@ -31,7 +31,7 @@ function View() {
     taskCountText.innerHTML = `${taskCount} Active tasks`;
   }
 
-  function addNewTask(id, description, isCompleted) {
+  function addTask(id, description, isCompleted) {
     let checkbox;
     let task = document.createElement('li');
 
@@ -53,19 +53,20 @@ function View() {
 
   function switchTaskStatus(id) {
     let taskTextElement = taskElements[id].lastElementChild;
+    let isCompleted = Model.switchTaskStatus(id);
 
-    Model.switchTaskStatus(id, function toggleCompletedClassName(isCompleted) {
-      if (isCompleted === true) {
-        taskTextElement.className = 'completed';
-      } else {
-        taskTextElement.className = '';
-      }
-      updateActiveTasksCount();
-    });
+    if (isCompleted === true) {
+      taskTextElement.className = 'completed';
+    } else {
+      taskTextElement.className = '';
+    }
+
+    updateActiveTasksCount();
   }
 
   function updateActiveTasksCount() {
-    Model.getActiveTaskCount(setTasksCount);
+    let activeTaskCount = Model.getActiveTaskIds().length;
+    setTasksCount(activeTaskCount);
   }
 
   function setEventListeners() {
@@ -97,24 +98,22 @@ function View() {
     let description = newTaskInput.value;
 
     if (description.length > 0) {
-      Model.addTask(description, (taskId) => {
-        addNewTask(taskId, description, false);
-      });
+      let taskId = Model.addTask(description);
+      addTask(taskId, description, false);
 
       newTaskInput.value = '';
     }
   }
 
   function taskListChangeHandler() {
+    let tasks = Model.getTasks();
     updateActiveTasksCount();
 
-    Model.getTasks((tasks) => {
-      if (Object.entries(tasks).length === 0) {
-        Helpers.showElement(emptyListMessage);
-      } else {
-        Helpers.hideElement(emptyListMessage);
-      }
-    });
+    if (Object.entries(tasks).length === 0) {
+      Helpers.showElement(emptyListMessage);
+    } else {
+      Helpers.hideElement(emptyListMessage);
+    }
   }
 
   function showAllTasks() {
@@ -124,15 +123,13 @@ function View() {
   }
 
   function showActiveTasks() {
-    Model.getActiveTaskIds((activeTaskIds) => {
-      filterTasks(activeTaskIds);
-    });
+    let activeTaskIds = Model.getActiveTaskIds();
+    filterTasks(activeTaskIds);
   }
 
   function showCompletedTasks() {
-    Model.getCompletedTaskIds((completedTaskIds) => {
-      filterTasks(completedTaskIds);
-    });
+    let completedTaskIds = Model.getCompletedTaskIds();
+    filterTasks(completedTaskIds);
   }
 
   function setFilterMenuActive(filter) {
@@ -147,7 +144,7 @@ function View() {
 
   function filterTasks(taskIds) {
     Object.entries(taskElements).forEach(([taskId, taskElement]) => {
-      if (taskIds.includes(taskId)) {
+      if (taskIds.includes(Number(taskId))) {
         Helpers.showElement(taskElement);
       } else {
         Helpers.hideElement(taskElement);
@@ -160,10 +157,8 @@ function View() {
     setEventListeners();
     setDateAndMonth();
 
-    Model.getTasks(function addTasks(tasks) {
-      Object.entries(tasks).forEach(([taskId, task]) => {
-        addNewTask(taskId, task.description, task.completed);
-      });
+    Model.getTasks().forEach((task) => {
+      addTask(task.id, task.description, task.completed);
     });
   }
 

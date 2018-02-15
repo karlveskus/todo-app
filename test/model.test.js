@@ -4,24 +4,27 @@ import 'mock-local-storage'; // Mock localStorage
 import Model from '../js/model';
 
 const task = {
-  description: 'New Task',
+  id: 0,
+  description: 'First task',
   completed: false,
+  removed: false,
 };
 
-function addNewTask(callback) {
-  Model.addTask(task.description, callback);
+function addNewTask() {
+  let taskId = Model.addTask(task.description);
+  return taskId;
 }
 
-function addCompletedTask(callback) {
-  addNewTask((taskId) => {
-    Model.switchTaskStatus(taskId, () => callback(taskId));
-  });
+function addCompletedTask() {
+  let taskId = addNewTask();
+  Model.switchTaskStatus(taskId);
+  return taskId;
 }
 
-function addNewTasks(callback) {
-  Model.addTask(task.description, () => {
-    Model.addTask(task.description, callback);
-  });
+function addRemovedTask() {
+  let taskId = addNewTask();
+  Model.removeTask(taskId);
+  return taskId;
 }
 
 function resetState() {
@@ -31,18 +34,17 @@ function resetState() {
 describe('getTasks()', () => {
   beforeEach(resetState);
 
-  it('returns an empty object if tasks are not set', () => {
-    Model.getTasks((tasks) => {
-      assert.deepEqual(tasks, {});
-    });
+  it('returns an empty list if tasks are not set', () => {
+    let tasks = Model.getTasks();
+
+    assert.deepEqual(tasks, []);
   });
 
-  it('returns tasks object if tasks are set', () => {
-    addNewTasks(() => {
-      Model.getTasks((tasks) => {
-        assert.deepEqual(tasks, { 0: task, 1: task });
-      });
-    });
+  it('returns tasks list if tasks are set', () => {
+    addNewTask();
+    let tasks = Model.getTasks();
+
+    assert.deepEqual(tasks, [task]);
   });
 });
 
@@ -50,17 +52,17 @@ describe('addTask()', () => {
   beforeEach(resetState);
 
   it('adds a new task to the empty task list', () => {
-    addNewTask(() => {
-      Model.getTasks((tasks) => {
-        assert.deepEqual(tasks, { 0: task });
-      });
-    });
+    addNewTask();
+    let tasks = Model.getTasks();
+
+    assert.deepEqual(tasks, [task]);
   });
 
   it('returns the task ID when adding a new task', () => {
-    addNewTask((taskId) => {
-      assert.strictEqual(taskId, 0);
-    });
+    addNewTask();
+    let taskId = addNewTask();
+
+    assert.strictEqual(taskId, 1);
   });
 });
 
@@ -68,73 +70,67 @@ describe('switchTaskStatus()', () => {
   beforeEach(resetState);
 
   it('switches task status to completed', () => {
-    addNewTask((taskId) => {
-      Model.switchTaskStatus(taskId, (isCompleted) => {
-        assert.equal(isCompleted, true);
-      });
-    });
+    let taskId = addNewTask();
+    Model.switchTaskStatus(taskId);
+    let task = Model.getTasks().filter(task => task.id === taskId)[0];
+
+    assert.equal(task.completed, true);
   });
 
   it('switches task status to active', () => {
-    addCompletedTask((taskId) => {
-      Model.switchTaskStatus(taskId, (isCompleted) => {
-        assert.equal(isCompleted, false);
-      });
-    });
-  });
-});
+    let taskId = addCompletedTask();
+    Model.switchTaskStatus(taskId);
+    let task = Model.getTasks().filter(task => task.id === taskId)[0];
 
-describe('getActiveTaskCount()', () => {
-  beforeEach(resetState);
-
-  it('returns 0 if no active tasks', () => {
-    Model.getActiveTaskCount((count) => {
-      assert.equal(count, 0);
-    });
+    assert.equal(task.completed, false);
   });
 
-  it('returns active task count when no completed tasks exist', () => {
-    addNewTasks(() => {
-      Model.getActiveTaskCount((count) => {
-        assert.strictEqual(count, 2);
-      });
-    });
+  it('returns true if task status was changed to completed', () => {
+    let taskId = addNewTask();
+    let isCompleted = Model.switchTaskStatus(taskId);
+
+    assert.equal(isCompleted, true);
   });
 
-  it('returns active task count when completed task exists', () => {
-    addCompletedTask(() => {
-      addNewTasks(() => {
-        Model.getActiveTaskCount((count) => {
-          assert.strictEqual(count, 2);
-        });
-      });
-    });
+  it('returns false if task status was changed to active', () => {
+    let taskId = addCompletedTask();
+    let isCompleted = Model.switchTaskStatus(taskId);
+
+    assert.equal(isCompleted, false);
   });
 });
 
 describe('getActiveTaskIds()', () => {
   beforeEach(resetState);
 
-  it('returns empty list if no active tasks available', () => {
-    addCompletedTask(() => {
-      Model.getActiveTaskIds((activeTaskIds) => {
-        let expected = [];
+  it('returns an empty list if no active tasks added', () => {
+    let activeTaskIds = Model.getActiveTaskIds();
 
-        assert.deepEqual(activeTaskIds, expected);
-      });
-    });
+    assert.deepEqual(activeTaskIds, []);
   });
 
-  it('returns list of active task Ids', () => {
-    addNewTasks(() => {
-      addCompletedTask(() => {
-        Model.getActiveTaskIds((activeTaskIds) => {
-          let expected = ['0', '1'];
+  it('returns a list of active task IDs when no completed tasks added', () => {
+    let taskId = addNewTask();
+    let activeTaskIds = Model.getActiveTaskIds();
 
-          assert.deepEqual(activeTaskIds, expected);
-        });
-      });
-    });
+    assert.deepEqual(activeTaskIds, [taskId]);
+  });
+
+  it('returns a list of active task IDs when completed tasks exist', () => {
+    let taskId1 = addNewTask();
+    let taskId2 = addNewTask();
+    addCompletedTask();
+    let activeTaskIds = Model.getActiveTaskIds();
+
+    assert.deepEqual(activeTaskIds, [taskId1, taskId2]);
+  });
+
+  it('returns a list of active task IDs when removed tasks exists', () => {
+    addRemovedTask();
+    let taskId = addNewTask();
+    let activeTaskIds = Model.getActiveTaskIds();
+
+    assert.deepEqual(activeTaskIds, [taskId]);
   });
 });
 
@@ -142,39 +138,39 @@ describe('getCompletedTaskIds()', () => {
   beforeEach(resetState);
 
   it('returns empty list if no completed tasks available', () => {
-    addNewTasks(() => {
-      Model.getCompletedTaskIds((getCompletedTaskIds) => {
-        let expected = [];
+    let completedTaskIds = Model.getCompletedTaskIds();
 
-        assert.deepEqual(getCompletedTaskIds, expected);
-      });
-    });
+    assert.deepEqual(completedTaskIds, []);
   });
 
-  it('returns list of active task Ids', () => {
-    addNewTasks(() => {
-      addCompletedTask(() => {
-        Model.getCompletedTaskIds((getCompletedTaskIds) => {
-          let expected = ['2'];
+  it('returns list of completed task Ids', () => {
+    addNewTask();
+    addNewTask();
+    let taskId = addCompletedTask();
+    let completedTaskIds = Model.getCompletedTaskIds();
 
-          assert.deepEqual(getCompletedTaskIds, expected);
-        });
-      });
-    });
+    assert.deepEqual(completedTaskIds, [taskId]);
+  });
+
+  it('returns a list of completed task IDs when removed tasks exists', () => {
+    let taskId = addCompletedTask();
+    addRemovedTask();
+    let completedTaskIds = Model.getCompletedTaskIds();
+
+    assert.deepEqual(completedTaskIds, [taskId]);
   });
 });
 
 describe('removeTask()', () => {
   beforeEach(resetState);
 
-  it('removes task from tasks list', () => {
-    addNewTask((taskId) => {
-      Model.removeTask(taskId, () => {
-        Model.getTasks((tasks) => {
-          let expected = {};
-          assert.deepEqual(tasks, expected);
-        });
-      });
-    });
+  it('sets task removed value to true', () => {
+    let taskId = addNewTask();
+    Model.removeTask(taskId);
+    let tasks = Model.getTasks();
+    let removedTask = task;
+    removedTask.removed = true;
+
+    assert.deepEqual(tasks, [removedTask]);
   });
 });
