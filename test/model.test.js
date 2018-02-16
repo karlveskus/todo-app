@@ -7,7 +7,6 @@ const task = {
   id: 0,
   description: 'First task',
   completed: false,
-  removed: false,
 };
 
 function addNewTask() {
@@ -21,14 +20,9 @@ function addCompletedTask() {
   return taskId;
 }
 
-function addRemovedTask() {
-  let taskId = addNewTask();
-  Model.removeTask(taskId);
-  return taskId;
-}
-
 function resetState() {
   Model.resetTasks();
+  Model.init();
 }
 
 describe('getTasks()', () => {
@@ -124,14 +118,6 @@ describe('getActiveTaskIds()', () => {
 
     assert.deepEqual(activeTaskIds, [taskId1, taskId2]);
   });
-
-  it('returns a list of active task IDs when removed tasks exists', () => {
-    addRemovedTask();
-    let taskId = addNewTask();
-    let activeTaskIds = Model.getActiveTaskIds();
-
-    assert.deepEqual(activeTaskIds, [taskId]);
-  });
 });
 
 describe('getCompletedTaskIds()', () => {
@@ -151,26 +137,16 @@ describe('getCompletedTaskIds()', () => {
 
     assert.deepEqual(completedTaskIds, [taskId]);
   });
-
-  it('returns a list of completed task IDs when removed tasks exists', () => {
-    let taskId = addCompletedTask();
-    addRemovedTask();
-    let completedTaskIds = Model.getCompletedTaskIds();
-
-    assert.deepEqual(completedTaskIds, [taskId]);
-  });
 });
 
 describe('removeTask()', () => {
   beforeEach(resetState);
 
-  it('sets task removed value to true', () => {
+  it('removes task from task list', () => {
     let taskId = addNewTask();
     Model.removeTask(taskId);
     let tasks = Model.getTasks();
-    let removedTask = task;
-    removedTask.removed = true;
 
-    assert.deepEqual(tasks, [removedTask]);
+    assert.deepEqual(tasks, []);
   });
 });

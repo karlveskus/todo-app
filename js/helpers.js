@@ -1,15 +1,15 @@
-function Helpers() {
-  let publicAPI;
-
-  function getCurrentDay(date) {
+export default {
+  getCurrentDay(timeInMilliseconds) {
+    let date = new Date(timeInMilliseconds);
     let days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     let day = days[date.getDay()];
 
     return day;
-  }
+  },
 
-  function getCurrentDate(inputDate) {
-    let date = inputDate.getDate();
+  getCurrentDate(timeInMilliseconds) {
+    let date = new Date(timeInMilliseconds);
+    date = date.getDate();
 
     let j = date % 10;
     let k = date % 100;
@@ -24,33 +24,21 @@ function Helpers() {
       return `${date}rd`;
     }
     return `${date}th`;
-  }
+  },
 
-
-  function getCurrentMonth(inputDate) {
+  getCurrentMonth(timeInMilliseconds) {
+    let date = new Date(timeInMilliseconds);
     let monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
       'July', 'August', 'September', 'October', 'November', 'December'];
 
-    return monthNames[inputDate.getMonth()];
-  }
+    return monthNames[date.getMonth()];
+  },
 
-  function showElement(element) {
+  showElement(element) {
     element.style.display = 'block';
-  }
+  },
 
-  function hideElement(element) {
+  hideElement(element) {
     element.style.display = 'none';
-  }
-
-  publicAPI = {
-    getCurrentDay,
-    getCurrentDate,
-    getCurrentMonth,
-    showElement,
-    hideElement,
-  };
-
-  return publicAPI;
-}
-
-export default Helpers();
+  },
+};

@@ -19,47 +19,47 @@ describe('showElement()', () => {
 });
 
 describe('getCurrentDay()', () => {
-  it('returns Thursday', () => {
-    let actual = Helpers.getCurrentDay(new Date(2018, 2, 1, 1, 0, 0, 0));
-    assert.equal('Thursday', actual);
+  it('returns Monday', () => {
+    let actual = Helpers.getCurrentDay(1518390000000);
+    assert.equal('Monday', actual);
   });
 
-  it('returns Friday', () => {
-    let actual = Helpers.getCurrentDay(new Date(2018, 2, 2, 1, 0, 0, 0));
-    assert.equal('Friday', actual);
+  it('returns Tuesday', () => {
+    let actual = Helpers.getCurrentDay(1518476400000);
+    assert.equal('Tuesday', actual);
   });
 });
 
 describe('getCurrentDate()', () => {
   it('returns 1st', () => {
-    let actual = Helpers.getCurrentDate(new Date(2018, 2, 1, 1, 0, 0, 0));
+    let actual = Helpers.getCurrentDate(1519858800000);
     assert.equal('1st', actual);
   });
 
   it('returns 2nd', () => {
-    let actual = Helpers.getCurrentDate(new Date(2018, 2, 2, 1, 0, 0, 0));
+    let actual = Helpers.getCurrentDate(1519945200000);
     assert.equal('2nd', actual);
   });
 
   it('returns 3rd', () => {
-    let actual = Helpers.getCurrentDate(new Date(2018, 2, 3, 1, 0, 0, 0));
+    let actual = Helpers.getCurrentDate(1520031600000);
     assert.equal('3rd', actual);
   });
 
   it('returns 4th', () => {
-    let actual = Helpers.getCurrentDate(new Date(2018, 2, 4, 1, 0, 0, 0));
+    let actual = Helpers.getCurrentDate(1520118000000);
     assert.equal('4th', actual);
   });
 });
 
 describe('getCurrentMonth()', () => {
   it('returns January', () => {
-    let actual = Helpers.getCurrentMonth(new Date(2018, 0, 1, 1, 0, 0, 0));
+    let actual = Helpers.getCurrentMonth(1514761200000);
     assert.deepEqual('January', actual);
   });
 
   it('returns February', () => {
-    let actual = Helpers.getCurrentMonth(new Date(2018, 1, 1, 1, 0, 0, 0));
+    let actual = Helpers.getCurrentMonth(1517439600000);
     assert.deepEqual('February', actual);
   });
 });

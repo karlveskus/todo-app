@@ -10,7 +10,6 @@ function Model() {
       id: taskId,
       description,
       completed: false,
-      removed: false,
     });
     saveTasks();
 
@@ -18,12 +17,12 @@ function Model() {
   }
 
   function getCompletedTaskIds() {
-    let completed = task => (task.removed === false) && (task.completed === true);
+    let completed = task => task.completed === true;
     return filterTasksAndGetIDs(completed);
   }
 
   function getActiveTaskIds() {
-    let active = task => (task.removed === false) && (task.completed === false);
+    let active = task => task.completed === false;
     return filterTasksAndGetIDs(active);
   }
 
@@ -42,7 +41,7 @@ function Model() {
   }
 
   function removeTask(id) {
-    tasks[id].removed = true;
+    tasks = tasks.filter(task => task.id !== id);
     saveTasks();
   }
 
