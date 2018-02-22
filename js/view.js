@@ -3,7 +3,6 @@ import Model from './model';
 
 function View() {
   let taskElements = {}; // {id: DOMElement}
-  let publicAPI;
 
   const dateText = document.getElementById('date');
   const monthText = document.getElementById('month');
@@ -32,7 +31,6 @@ function View() {
   }
 
   function addTask(id, description, isCompleted) {
-    let checkbox;
     let task = document.createElement('li');
 
     task.innerHTML = `
@@ -41,18 +39,22 @@ function View() {
           <label for="checkbox-${id}"></label>
       </div>
       <p class="${isCompleted ? 'completed' : ''}">${description}</p>
+      <span class="remove-task" title="Remove this task">&#10005;</span>
     `;
 
     taskElements[id] = task;
 
-    checkbox = task.querySelector('input');
+    let checkbox = task.querySelector('input');
     checkbox.addEventListener('click', () => switchTaskStatus(id));
+
+    let removeTaskButton = task.querySelector('span');
+    removeTaskButton.addEventListener('click', () => removeTask(id));
 
     taskList.insertBefore(task, taskList.firstChild);
   }
 
   function switchTaskStatus(id) {
-    let taskTextElement = taskElements[id].lastElementChild;
+    let taskTextElement = taskElements[id].querySelector('p');
     let isCompleted = Model.switchTaskStatus(id);
 
     if (isCompleted === true) {
@@ -62,6 +64,13 @@ function View() {
     }
 
     updateActiveTasksCount();
+  }
+
+  function removeTask(id) {
+    Model.removeTask(id);
+    let taskElement = taskElements[id];
+    delete taskElements[id];
+    taskList.removeChild(taskElement);
   }
 
   function updateActiveTasksCount() {
@@ -162,7 +171,7 @@ function View() {
     });
   }
 
-  publicAPI = {
+  let publicAPI = {
     init,
   };
 

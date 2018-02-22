@@ -1,6 +1,5 @@
 function Model() {
   const localStorageKey = 'tasks';
-  let publicAPI;
   let tasks;
 
   function addTask(description) {
@@ -62,7 +61,7 @@ function Model() {
     tasks = getTasks();
   }
 
-  publicAPI = {
+  let publicAPI = {
     init,
     getTasks,
     addTask,

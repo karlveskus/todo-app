@@ -143,101 +143,115 @@ body {
             }
         }
 
-        ul {
+        ul#task-list {
             list-style-type: none;
             margin: 0;
             padding: 0;
 
-            &#task-list {
-                li {
-                    border-bottom: 1px solid $line-gray;
-                    padding: 20px 15px;
+            li {
+                border-bottom: 1px solid $line-gray;
+                padding: 20px 15px;
+                position: relative;
 
-                    .checkbox {
-                        display: inline-block;
-                        position: relative;
-                        vertical-align: middle;
-                        width: 20px;
+                .checkbox {
+                    display: inline-block;
+                    position: relative;
+                    vertical-align: middle;
+                    width: 20px;
 
-                        label {
-                            background: white;
-                            border: 1px solid $secondary-dark-gray;
-                            border-radius: 4px;
-                            cursor: pointer;
-                            height: 18px;
-                            left: 0;
+                    label {
+                        background: white;
+                        border: 1px solid $secondary-dark-gray;
+                        border-radius: 4px;
+                        cursor: pointer;
+                        height: 18px;
+                        left: 0;
+                        position: absolute;
+                        top: 1px;
+                        width: 18px;
+
+                        &:after {
+                            border: 3px solid $secondary-dark-gray;
+                            border-right: none;
+                            border-top: none;
+                            content: '';
+                            height: 4px;
+                            left: 4px;
+                            opacity: 0;
                             position: absolute;
-                            top: 1px;
-                            width: 18px;
-
-                            &:after {
-                                border: 3px solid $secondary-dark-gray;
-                                border-right: none;
-                                border-top: none;
-                                content: '';
-                                height: 4px;
-                                left: 4px;
-                                opacity: 0;
-                                position: absolute;
-                                top: 4px;
-                                transform: rotate(-45deg);
-                                width: 8px;
-                            }
-                        }
-
-                        input[type=checkbox] {
-                            visibility: hidden;
-
-                            &:checked + label:after {
-                                opacity: 1;
-                            }
+                            top: 4px;
+                            transform: rotate(-45deg);
+                            width: 8px;
                         }
                     }
 
-                    p {
-                        display: inline-block;
-                        font-size: 20px;
-                        font-weight: 300;
-                        margin: 0 0 0 10px;
-                        overflow: hidden;
-                        position: relative;
-                        text-overflow: ellipsis;
-                        vertical-align: middle;
-                        white-space: nowrap;
-                        width: 80%;
+                    input[type=checkbox] {
+                        visibility: hidden;
 
-                        &.completed {
-                            text-decoration: line-through;
+                        &:checked + label:after {
+                            opacity: 1;
                         }
-                    }
-
-                    &:hover {
-                        background: $heading-gray;
                     }
                 }
 
-                p.empty-list-message {
-                    margin: 20px;
-                    text-align: center;
+                p {
+                    display: inline-block;
+                    font-size: 20px;
+                    font-weight: 300;
+                    margin: 0;
+                    overflow: hidden;
+                    padding-left: 10px;
+                    text-overflow: ellipsis;
+                    vertical-align: middle;
+                    white-space: nowrap;
+                    width: calc(100% - 65px);
+
+                    &.completed {
+                        text-decoration: line-through;
+                    }
+                }
+
+                span.remove-task {
+                    color: red;
+                    display: inline-block;
+                    font-size: 19px;
+                    margin-left: 11px;
+                    vertical-align: middle;
+
+                    &:hover, &:active {
+                        cursor: pointer;
+                    }
+                }
+
+                &:hover {
+                    background: $heading-gray;
                 }
             }
 
-            &.show-menu {
+            p.empty-list-message {
+                margin: 20px;
                 text-align: center;
+            }
+        }
 
-                li {
-                    display: inline-block;
-                    margin: 5px;
-                    padding: 5px;
+        ul.show-menu {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            text-align: center;
 
-                    &.active {
-                        color: $light-green;
-                    }
+            li {
+                display: inline-block;
+                margin: 5px;
+                padding: 5px;
 
-                    &:hover {
-                        color: $light-green;
-                        cursor: pointer;
-                    }
+                &.active {
+                    color: $light-green;
+                }
+
+                &:hover {
+                    color: $light-green;
+                    cursor: pointer;
                 }
             }
         }
