@@ -10,6 +10,7 @@ function View() {
   const newTaskInput = document.getElementById('new-task-input');
   const newTaskButton = document.getElementById('new-task-button');
   const taskList = document.getElementById('task-list');
+  const filteringMenu = document.getElementById('show-menu');
   const showAll = document.getElementById('show-all');
   const showActive = document.getElementById('show-active');
   const showCompleted = document.getElementById('show-completed');
@@ -68,9 +69,8 @@ function View() {
 
   function removeTask(id) {
     Model.removeTask(id);
-    let taskElement = taskElements[id];
+    taskList.removeChild(taskElements[id]);
     delete taskElements[id];
-    taskList.removeChild(taskElement);
   }
 
   function updateActiveTasksCount() {
@@ -81,7 +81,7 @@ function View() {
   function setEventListeners() {
     newTaskButton.addEventListener('click', newTaskClickHandler);
     newTaskInput.addEventListener('keyup', (e) => {
-      if (e.keyCode === 13) {
+      if (e.keyCode === 13) { // Enter key
         newTaskButton.click();
       }
     });
@@ -120,8 +120,10 @@ function View() {
 
     if (Object.entries(tasks).length === 0) {
       Helpers.showElement(emptyListMessage);
+      Helpers.hideElement(filteringMenu);
     } else {
       Helpers.hideElement(emptyListMessage);
+      Helpers.showElement(filteringMenu);
     }
   }
 
@@ -162,13 +164,20 @@ function View() {
   }
 
   function init() {
-    Helpers.showElement(emptyListMessage);
+    // Add eventListeners for buttons and taskList
     setEventListeners();
     setDateAndMonth();
+
+    // Hide filtering menu. It will be shown again when taskList child count increases above 1
+    Helpers.hideElement(filteringMenu);
 
     Model.getTasks().forEach((task) => {
       addTask(task.id, task.description, task.completed);
     });
+
+    // Show taskList section after everything else is done
+    let section = document.querySelector('section');
+    Helpers.showElement(section);
   }
 
   let publicAPI = {
