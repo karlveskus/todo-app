@@ -31,40 +31,9 @@ function View() {
     taskCountText.innerHTML = `${taskCount} Active tasks`;
   }
 
-  function addTask(id, description, isCompleted) {
-    let task = document.createElement('li');
-
-    task.innerHTML = `
-      <div class="checkbox">
-          <input type="checkbox" id="checkbox-${id}" ${isCompleted ? 'checked' : ''}/>
-          <label for="checkbox-${id}"></label>
-      </div>
-      <p class="${isCompleted ? 'completed' : ''}">${description}</p>
-      <span class="remove-task" title="Remove this task">&#10005;</span>
-    `;
-
-    taskElements[id] = task;
-
-    let checkbox = task.querySelector('input');
-    checkbox.addEventListener('click', () => switchTaskStatus(id));
-
-    let removeTaskButton = task.querySelector('span');
-    removeTaskButton.addEventListener('click', () => removeTask(id));
-
-    taskList.insertBefore(task, taskList.firstChild);
-  }
-
-  function switchTaskStatus(id) {
-    let taskTextElement = taskElements[id].querySelector('p');
-    let isCompleted = Model.switchTaskStatus(id);
-
-    if (isCompleted === true) {
-      taskTextElement.className = 'completed';
-    } else {
-      taskTextElement.className = '';
-    }
-
-    updateActiveTasksCount();
+  function updateActiveTasksCount() {
+    let activeTaskCount = Model.getActiveTaskIds().length;
+    setTasksCount(activeTaskCount);
   }
 
   function removeTask(id) {
@@ -73,45 +42,14 @@ function View() {
     delete taskElements[id];
   }
 
-  function updateActiveTasksCount() {
-    let activeTaskCount = Model.getActiveTaskIds().length;
-    setTasksCount(activeTaskCount);
-  }
-
-  function setEventListeners() {
-    newTaskButton.addEventListener('click', newTaskClickHandler);
-    newTaskInput.addEventListener('keyup', (e) => {
-      if (e.keyCode === 13) { // Enter key
-        newTaskButton.click();
+  function filterTasks(taskIds) {
+    Object.entries(taskElements).forEach(([taskId, taskElement]) => {
+      if (taskIds.includes(Number(taskId))) {
+        Helpers.showElement(taskElement);
+      } else {
+        Helpers.hideElement(taskElement);
       }
     });
-
-    taskList.addEventListener('DOMNodeInserted', taskListChangeHandler);
-    taskList.addEventListener('DOMNodeRemoved', taskListChangeHandler);
-
-    showAll.addEventListener('click', () => {
-      showAllTasks();
-      setFilterMenuActive(showAll);
-    });
-    showActive.addEventListener('click', () => {
-      showActiveTasks();
-      setFilterMenuActive(showActive);
-    });
-    showCompleted.addEventListener('click', () => {
-      showCompletedTasks();
-      setFilterMenuActive(showCompleted);
-    });
-  }
-
-  function newTaskClickHandler() {
-    let description = newTaskInput.value;
-
-    if (description.length > 0) {
-      let taskId = Model.addTask(description);
-      addTask(taskId, description, false);
-
-      newTaskInput.value = '';
-    }
   }
 
   function taskListChangeHandler() {
@@ -144,6 +82,7 @@ function View() {
   }
 
   function setFilterMenuActive(filter) {
+    /* eslint-disable no-param-reassign */
     [showAll, showActive, showCompleted].forEach((element) => {
       if (element === filter) {
         element.className = 'active';
@@ -151,15 +90,78 @@ function View() {
         element.className = '';
       }
     });
+    /* eslint-enable no-param-reassign */
   }
 
-  function filterTasks(taskIds) {
-    Object.entries(taskElements).forEach(([taskId, taskElement]) => {
-      if (taskIds.includes(Number(taskId))) {
-        Helpers.showElement(taskElement);
-      } else {
-        Helpers.hideElement(taskElement);
+  function switchTaskStatus(id) {
+    let taskTextElement = taskElements[id].querySelector('p');
+    let isCompleted = Model.switchTaskStatus(id);
+
+    if (isCompleted === true) {
+      taskTextElement.className = 'completed';
+    } else {
+      taskTextElement.className = '';
+    }
+
+    updateActiveTasksCount();
+  }
+
+  function addTask(id, description, isCompleted) {
+    let task = document.createElement('li');
+
+    task.innerHTML = `
+      <div class="checkbox">
+          <input type="checkbox" id="checkbox-${id}" ${isCompleted ? 'checked' : ''}/>
+          <label for="checkbox-${id}"></label>
+      </div>
+      <p class="${isCompleted ? 'completed' : ''}">${description}</p>
+      <span class="remove-task" title="Remove this task">&#10005;</span>
+    `;
+
+    taskElements[id] = task;
+
+    let checkbox = task.querySelector('input');
+    checkbox.addEventListener('click', () => switchTaskStatus(id));
+
+    let removeTaskButton = task.querySelector('span');
+    removeTaskButton.addEventListener('click', () => removeTask(id));
+
+    taskList.insertBefore(task, taskList.firstChild);
+  }
+
+  function newTaskClickHandler() {
+    let description = newTaskInput.value;
+
+    if (description.length > 0) {
+      let taskId = Model.addTask(description);
+      addTask(taskId, description, false);
+
+      newTaskInput.value = '';
+    }
+  }
+
+  function setEventListeners() {
+    newTaskButton.addEventListener('click', newTaskClickHandler);
+    newTaskInput.addEventListener('keyup', (e) => {
+      if (e.keyCode === 13) { // Enter key
+        newTaskButton.click();
       }
+    });
+
+    taskList.addEventListener('DOMNodeInserted', taskListChangeHandler);
+    taskList.addEventListener('DOMNodeRemoved', taskListChangeHandler);
+
+    showAll.addEventListener('click', () => {
+      showAllTasks();
+      setFilterMenuActive(showAll);
+    });
+    showActive.addEventListener('click', () => {
+      showActiveTasks();
+      setFilterMenuActive(showActive);
+    });
+    showCompleted.addEventListener('click', () => {
+      showCompletedTasks();
+      setFilterMenuActive(showCompleted);
     });
   }
 

@@ -4,12 +4,12 @@
   "description": "",
   "main": "index.html",
   "scripts": {
-    "dev": "concurrently \"webpack --watch --progress --colors --config config/webpack.dev.config.js\" \"open http://localhost:63342/todo-app/dist/index.html\"",
+    "dev": "webpack-dev-server --watch --open --config config/webpack.dev.config.js",
     "build": "webpack --progress --hide-modules --config config/webpack.prod.config.js",
-    "eslint": "node_modules/.bin/eslint js",
+    "lint": "node_modules/.bin/eslint js",
     "deploy": "npm run build && node_modules/.bin/gh-pages -d dist",
     "test": "mocha --require babel-core/register",
-    "coverage": "nyc --reporter=html --reporter=text mocha --require babel-core/register"
+    "test:coverage": "nyc --reporter=html --reporter=text mocha --require babel-core/register"
   },
   "repository": {
     "type": "git",
@@ -36,7 +36,6 @@
     "eslint": "^4.15.0",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.8.0",
-    "extract-text-webpack-plugin": "^3.0.2",
     "gh-pages": "^1.1.0",
     "jsdom": "^11.6.2",
     "mocha": "^5.0.0",
@@ -44,11 +43,12 @@
     "node-sass": "^4.7.2",
     "nyc": "^11.4.1",
     "postcss-loader": "^2.0.10",
-    "sass-loader": "^6.0.6",
+    "sass-loader": "^6.0.7",
     "style-loader": "^0.19.1",
     "svg-inline-loader": "^0.8.0",
     "uglifyjs-webpack-plugin": "^1.1.6",
-    "webpack": "^3.10.0",
+    "webpack": "^2.7.0",
+    "webpack-dev-server": "^2.2.0",
     "webpack-merge": "^4.1.1"
   }
 }

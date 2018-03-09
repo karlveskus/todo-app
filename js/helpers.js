@@ -28,17 +28,18 @@ export default {
 
   getCurrentMonth(timeInMilliseconds) {
     let date = new Date(timeInMilliseconds);
-    let monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+    let monthNames = [
+      'January', 'February', 'March', 'April', 'May', 'June',
       'July', 'August', 'September', 'October', 'November', 'December'];
 
     return monthNames[date.getMonth()];
   },
 
   showElement(element) {
-    element.style.display = 'block';
+    element.style.display = 'block'; // eslint-disable-line no-param-reassign
   },
 
   hideElement(element) {
-    element.style.display = 'none';
+    element.style.display = 'none'; // eslint-disable-line no-param-reassign
   },
 };
