@@ -1,6 +1,7 @@
 const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
   entry: [
@@ -26,27 +27,33 @@ module.exports = {
       },
       {
         test: /\.scss$/,
-        use: [
-          {
-            loader: 'style-loader', // creates style nodes from JS strings
-          }, {
-            loader: 'css-loader', // translates CSS into CommonJS
-          }, {
-            loader: 'postcss-loader', // only for autoprefixing
-            options: {
-              config: {
-                path: 'config/postcss.config.js',
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            {
+              loader: 'css-loader', // translates CSS into CommonJS
+              options: {
+                minimize: true, // minimize css
               },
-            },
-          }, {
-            loader: 'sass-loader', // compiles Sass to CSS
-          }],
+            }, {
+              loader: 'postcss-loader', // only for autoprefixing
+              options: {
+                config: {
+                  path: 'config/postcss.config.js',
+                },
+              },
+            }, {
+              loader: 'sass-loader', // compiles Sass to CSS
+            }],
+        }),
       },
     ],
   },
   plugins: [
     // Minify and uglify code
     new UglifyJsPlugin(),
+    // Extract scss files to 'css/style.css'
+    new ExtractTextPlugin('css/style.css'),
     // Copy static files to dist
     new CopyWebpackPlugin([
       { from: './static', to: './' },

@@ -1,5 +1,6 @@
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
   entry: [
@@ -23,49 +24,30 @@ module.exports = {
           },
         },
       },
-      // {
-      //   // Proccess CSS - uses ExtractTextPlugin to extract css to separate file
-      //   // and postcss-loader to for autoprefixing
-      //   test: /\.scss$/,
-      //   use: ExtractTextPlugin.extract({
-      //     use: [
-      //       {
-      //         loader: 'css-loader',
-      //       }, {
-      //         loader: 'postcss-loader',
-      //         options: {
-      //           config: {
-      //             path: 'config/postcss.config.js',
-      //           },
-      //         },
-      //       }, {
-      //         loader: 'sass-loader',
-      //       }],
-      //   }),
-      // },
       {
         test: /\.scss$/,
-        use: [
-          {
-            loader: 'style-loader', // creates style nodes from JS strings
-          }, {
-            loader: 'css-loader', // translates CSS into CommonJS
-          }, {
-            loader: 'postcss-loader', // only for autoprefixing
-            options: {
-              config: {
-                path: 'config/postcss.config.js',
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            {
+              loader: 'css-loader', // translates CSS into CommonJS
+            }, {
+              loader: 'postcss-loader', // only for autoprefixing
+              options: {
+                config: {
+                  path: 'config/postcss.config.js',
+                },
               },
-            },
-          }, {
-            loader: 'sass-loader', // compiles Sass to CSS
-          }],
+            }, {
+              loader: 'sass-loader', // compiles Sass to CSS
+            }],
+        }),
       },
     ],
   },
   plugins: [
-    // Extract SCSS to css/style.css
-    // new ExtractTextPlugin('css/style.css'),
+    // Extract scss files to 'css/style.css'
+    new ExtractTextPlugin('css/style.css'),
     // Copy static files to dist
     new CopyWebpackPlugin([
       { from: './static', to: './' },
