@@ -3,14 +3,14 @@ import 'babel-polyfill'; // Emulate a full ES2015+ environment
 import 'mock-local-storage'; // Mock localStorage
 import Model from '../js/model';
 
-const task = {
+const newTask = {
   id: 0,
   description: 'First task',
   completed: false,
 };
 
 function addNewTask() {
-  let taskId = Model.addTask(task.description);
+  let taskId = Model.addTask(newTask.description);
   return taskId;
 }
 
@@ -38,7 +38,7 @@ describe('getTasks()', () => {
     addNewTask();
     let tasks = Model.getTasks();
 
-    assert.deepEqual(tasks, [task]);
+    assert.deepEqual(tasks, [newTask]);
   });
 });
 
@@ -49,7 +49,7 @@ describe('addTask()', () => {
     addNewTask();
     let tasks = Model.getTasks();
 
-    assert.deepEqual(tasks, [task]);
+    assert.deepEqual(tasks, [newTask]);
   });
 
   it('returns the task ID when adding a new task', () => {
@@ -66,7 +66,7 @@ describe('switchTaskStatus()', () => {
   it('switches task status to completed', () => {
     let taskId = addNewTask();
     Model.switchTaskStatus(taskId);
-    let task = Model.getTasks().filter(task => task.id === taskId)[0];
+    let task = Model.getTasks().find(t => t.id === taskId);
 
     assert.equal(task.completed, true);
   });
@@ -74,7 +74,7 @@ describe('switchTaskStatus()', () => {
   it('switches task status to active', () => {
     let taskId = addCompletedTask();
     Model.switchTaskStatus(taskId);
-    let task = Model.getTasks().filter(task => task.id === taskId)[0];
+    let task = Model.getTasks().find(t => t.id === taskId);
 
     assert.equal(task.completed, false);
   });

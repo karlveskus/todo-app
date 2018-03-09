@@ -11,7 +11,15 @@ function Model() {
   }
 
   function addTask(description) {
-    let taskId = tasks.length;
+    let taskId;
+
+    if (tasks.length) {
+      // If task list is not empty, then get ID of the last task and add 1 to get a new task ID
+      let lastTask = tasks[tasks.length - 1];
+      taskId = lastTask.id + 1;
+    } else {
+      taskId = 0;
+    }
 
     tasks.push({
       id: taskId,
@@ -40,8 +48,15 @@ function Model() {
   }
 
   function switchTaskStatus(taskId) {
-    let newStatus = !tasks[taskId].completed;
-    tasks[taskId].completed = newStatus;
+    let newStatus;
+
+    tasks = tasks.map((task) => {
+      if (task.id === taskId) {
+        newStatus = !task.completed;
+        return Object.assign({}, task, { completed: newStatus });
+      }
+      return task;
+    });
     saveTasks();
 
     return newStatus;
